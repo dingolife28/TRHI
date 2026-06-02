@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cellular Resonance — TRHI 3D Art & Quiz</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Lora:wght@400;500&display=swap" rel="stylesheet">
+
+  <!-- Hintergrund-Modus: ?bg=1 blendet alle UI-Elemente aus (reine Atmosphäre,
+       z. B. als iframe hinter der Hero-Headline der TRHI-Site). Früh gesetzt,
+       damit kein UI-Flackern vor dem Ausblenden entsteht. -->
+  <script>
+    if (new URLSearchParams(location.search).get('bg') === '1') {
+      document.documentElement.classList.add('bg-mode');
+    }
+  </script>
+
+  <style>
+    :root {
+      --green-deep:  #0a1a0f;
+      --green-dark:  #1b4332;
+      --green-mid:   #2d6a4f;
+      --emerald:     #52b788;
+      --amber:       #f4a261;
+      --amber-dark:  #e76f51;
+      --white:       #faf9f5;
+      --glass:       rgba(8,15,10,0.82);
+      --glass-light: rgba(255,255,255,0.07);
+      --border:      rgba(82,183,136,0.25);
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { background:#000; overflow:hidden; font-family:'Poppins',sans-serif; color:var(--white); }
+
+    /* ── Hintergrund-Modus (?bg=1): nur die Kunst, keinerlei Bedienelemente ── */
+    .bg-mode #header-badge,
+    .bg-mode #controls { display:none !important; }
+
+    #three-canvas { position:fixed; inset:0; width:100%; height:100%; z-index:0; }
+
+    /* ── HEADER BADGE ── */
+    #header-badge {
+      position:fixed; top:20px; left:24px; z-index:5;
+      background:var(--glass); border:1px solid var(--border);
+      border-radius:10px; padding:10px 16px; backdrop-filter:blur(14px);
+    }
+    #header-badge .brand { font-family:'Lora',serif; font-size:15px; font-weight:500; color:var(--emerald); letter-spacing:.05em; }
+    #header-badge .tagline { font-size:11px; color:rgba(255,255,255,.45); margin-top:1px; }
+
+    /* ── CONTROLS ── */
+    #controls {
+      position:fixed; bottom:24px; right:24px; z-index:5;
+      display:flex; flex-direction:column; gap:8px; width:200px;
+    }
+    .ctrl-card {
+      background:var(--glass); border:1px solid var(--border);
+      border-radius:10px; padding:14px 16px; backdrop-filter:blur(14px);
+    }
+    .ctrl-card label { display:block; font-size:11px; color:rgba(255,255,255,.5); margin-bottom:6px; }
+    .ctrl-card input[type="range"] {
+      width:100%; -webkit-appearance:none; height:3px;
+      background:rgba(82,183,136,.3); border-radius:2px; outline:none;
+    }
+    .ctrl-card input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance:none; width:13px; height:13px;
+      background:var(--emerald); border-radius:50%; cursor:pointer;
+    }
+    .ctrl-row { display:flex; gap:7px; }
+    .ctrl-btn {
+      flex:1; background:var(--glass-light); border:1px solid var(--border);
+      color:var(--white); font-family:'Poppins',sans-serif; font-size:11px; font-weight:500;
+      padding:7px 4px; border-radius:7px; cursor:pointer; transition:all .2s; text-align:center;
+    }
+    .ctrl-btn:hover { background:rgba(82,183,136,.2); border-color:var(--emerald); }
+    .ctrl-btn.primary { background:linear-gradient(135deg,var(--green-mid),var(--emerald)); border-color:transparent; }
+    .ctrl-btn.primary:hover { opacity:.88; }
+    #seed-display { font-family:'Courier New',monospace; font-size:11px; color:var(--emerald); text-align:center; margin-bottom:6px; }
+
+    /* ══════════════════════════════════════
+       QUIZ OVERLAY
+    ══════════════════════════════════════ */
+    #quiz-overlay {
+      position:fixed; inset:0; z-index:20;
+      display:none; align-items:center; justify-content:center;
+      background:rgba(0,0,0,.55); backdrop-filter:blur(6px); padding:20px;
+    }
+    #quiz-overlay.active { display:flex; }
+
+    #quiz-panel {
+      background:rgba(8,20,12,.96); border:1px solid var(--border);
+      border-radius:18px; padding:36px 38px;
+      max-width:600px; width:100%; max-height:92vh; overflow-y:auto;
+      box-shadow:0 0 80px rgba(82,183,136,.12),0 30px 60px rgba(0,0,0,.5);
+      position:relative;
+    }
+    #quiz-panel::-webkit-scrollbar { width:4px; }
+    #quiz-panel::-webkit-scrollbar-thumb { background:var(--border); border-radius:2px; }
+
+    .quiz-close {
+      position:absolute; top:16px; right:20px;
+      background:none; border:none; color:rgba(255,255,255,.4);
+      font-size:22px; cursor:pointer; transition:color .2s; line-height:1;
+    }
+    .quiz-close:hover { color:var(--amber); }
+
+    .quiz-progress-wrap { background:rgba(255,255,255,.08); border-radius:99px; height:4px; margin-bottom:28px; overflow:hidden; }
+    .quiz-progress-fill { height:100%; background:linear-gradient(90deg,var(--emerald),var(--amber)); border-radius:99px; transition:width .45s cubic-bezier(.4,0,.2,1); }
+
+    .quiz-counter { font-size:11px; color:rgba(255,255,255,.4); text-align:right; margin-bottom:4px; }
+    .quiz-title-sm { font-family:'Lora',serif; font-size:22px; font-weight:500; color:var(--emerald); margin-bottom:4px; }
+    .quiz-subtitle  { font-size:13px; color:rgba(255,255,255,.45); margin-bottom:28px; }
+
+    .q-text { font-size:17px; font-weight:600; line-height:1.45; margin-bottom:22px; color:var(--white); }
+
+    .options { display:flex; flex-direction:column; gap:10px; }
+    .opt-btn {
+      background:rgba(255,255,255,.05); border:1.5px solid rgba(255,255,255,.1);
+      border-radius:11px; padding:13px 18px;
+      font-family:'Poppins',sans-serif; font-size:14px; color:var(--white);
+      cursor:pointer; text-align:left; transition:all .2s; line-height:1.4;
+    }
+    .opt-btn:hover:not(:disabled) { background:rgba(82,183,136,.12); border-color:var(--emerald); }
+    .opt-btn.correct { background:rgba(82,183,136,.18); border-color:var(--emerald); font-weight:600; }
+    .opt-btn.wrong   { background:rgba(231,111,81,.15);  border-color:var(--amber-dark); }
+    .opt-btn:disabled { cursor:default; }
+
+    .feedback { margin-top:16px; padding:12px 16px; border-radius:9px; font-size:13px; line-height:1.5; display:none; }
+    .feedback.show   { display:block; }
+    .feedback.correct { background:rgba(82,183,136,.12); border-left:3px solid var(--emerald); color:#a8e6c5; }
+    .feedback.wrong   { background:rgba(231,111,81,.1);  border-left:3px solid var(--amber-dark); color:#f4c4b1; }
+
+    .next-btn {
+      margin-top:20px; background:linear-gradient(135deg,var(--green-mid),var(--emerald));
+      border:none; border-radius:99px; color:white;
+      font-family:'Poppins',sans-serif; font-size:14px; font-weight:600;
+      padding:12px 30px; cursor:pointer; transition:opacity .2s,transform .15s; display:none;
+    }
+    .next-btn.show { display:inline-block; }
+    .next-btn:hover { opacity:.88; transform:translateY(-1px); }
+
+    /* ── RESULT ── */
+    .result-screen { display:none; text-align:center; }
+    .result-screen.show { display:block; }
+    .score-ring {
+      width:110px; height:110px; border-radius:50%;
+      background:conic-gradient(var(--emerald) 0%,var(--amber) 100%);
+      display:flex; align-items:center; justify-content:center;
+      margin:0 auto 24px;
+      box-shadow:0 0 40px rgba(82,183,136,.3); position:relative;
+    }
+    .score-ring::before { content:''; position:absolute; inset:6px; background:rgba(8,20,12,.97); border-radius:50%; }
+    .score-ring span { position:relative; z-index:1; font-size:1.9rem; font-weight:800; color:var(--emerald); }
+    .r-title { font-family:'Lora',serif; font-size:20px; margin-bottom:10px; color:var(--white); }
+    .r-desc  { font-size:14px; color:rgba(255,255,255,.55); line-height:1.6; margin-bottom:28px; }
+    .result-btns { display:flex; gap:10px; justify-content:center; flex-wrap:wrap; }
+    .result-btn {
+      border:none; border-radius:99px;
+      font-family:'Poppins',sans-serif; font-size:13px; font-weight:600;
+      padding:11px 24px; cursor:pointer; transition:all .2s;
+    }
+    .result-btn.primary  { background:linear-gradient(135deg,var(--green-mid),var(--emerald)); color:white; }
+    .result-btn.secondary{ background:rgba(244,162,97,.15); border:1.5px solid var(--amber); color:var(--amber); }
+    .result-btn.ghost    { background:rgba(255,255,255,.07); border:1.5px solid rgba(255,255,255,.15); color:rgba(255,255,255,.6); }
+    .result-btn:hover    { transform:translateY(-1px); opacity:.9; }
+
+    /* ── INTRO ── */
+    .intro-screen { text-align:center; }
+    .intro-icon  { font-size:3rem; margin-bottom:16px; }
+    .intro-h     { font-family:'Lora',serif; font-size:22px; font-weight:500; color:var(--emerald); margin-bottom:10px; }
+    .intro-p     { font-size:14px; color:rgba(255,255,255,.5); line-height:1.6; margin-bottom:28px; max-width:400px; margin-inline:auto; }
+    .start-btn   {
+      background:linear-gradient(135deg,var(--green-mid),var(--emerald));
+      border:none; border-radius:99px; color:white;
+      font-family:'Poppins',sans-serif; font-size:15px; font-weight:600;
+      padding:13px 36px; cursor:pointer; transition:all .2s;
+    }
+    .start-btn:hover { transform:translateY(-2px); box-shadow:0 8px 24px rgba(82,183,136,.3); }
+
+    @media(max-width:600px){
+      #quiz-panel { padding:24px 20px; }
+      .q-text { font-size:15px; }
+      #controls { width:170px; }
+    }
+  </style>
+
+  <!-- SHADERS -->
+  <script type="x-shader/x-vertex" id="vert-src">
+    attribute float aSpeed;
+    attribute float aPhase;
+    uniform float uTime;
+    uniform float uPulseRate;
+    varying float vSpeed;
+    void main(){
+      vSpeed = aSpeed;
+      vec4 mvPos = modelViewMatrix * vec4(position,1.0);
+      float beat = sin(uTime * uPulseRate + aPhase) * 0.5 + 0.5;
+      float sz = (1.3 + aSpeed * 3.6) * (0.65 + beat * 0.5);
+      gl_PointSize = sz * (190.0 / -mvPos.z);
+      gl_Position  = projectionMatrix * mvPos;
+    }
+  </script>
+  <script type="x-shader/x-fragment" id="frag-src">
+    uniform vec3 uC0, uC1, uC2;
+    varying float vSpeed;
+    void main(){
+      vec2 uv = gl_PointCoord * 2.0 - 1.0;
+      float d = dot(uv,uv);
+      if(d > 1.0) discard;
+      float g = pow(1.0 - smoothstep(0.0,1.0,d), 1.7);
+      vec3 col;
+      if(vSpeed < 0.5) col = mix(uC0, uC1, vSpeed * 2.0);
+      else             col = mix(uC1, uC2, (vSpeed-0.5)*2.0);
+      // Gedämpfte Helligkeit + niedrigere Alpha: das additive Blending
+      // brennt dichte Regionen nicht mehr weiß aus, Smaragd/Amber bleibt sichtbar.
+      col *= 1.05;
+      gl_FragColor = vec4(col, g * 0.5);
+    }
+  </script>
+</head>
+<body>
+
+<canvas id="three-canvas"></canvas>
+
+<div id="header-badge">
+  <div class="brand">TRHI</div>
+  <div class="tagline">Cellular Resonance · 3D Art & Quiz</div>
+</div>
+
+<!-- CONTROLS -->
+<div id="controls">
+  <div class="ctrl-card">
+    <div id="seed-display">Seed: 7842</div>
+    <div class="ctrl-row">
+      <button class="ctrl-btn" onclick="prevSeed()">← Prev</button>
+      <button class="ctrl-btn" onclick="nextSeed()">Next →</button>
+      <button class="ctrl-btn" onclick="randSeed()">↻</button>
+    </div>
+  </div>
+  <div class="ctrl-card">
+    <label>Vitaldichte</label>
+    <input type="range" id="sl-density" min="2000" max="12000" step="500" value="7000" oninput="onDensity(+this.value)">
+    <label style="margin-top:10px">Pulsrate</label>
+    <input type="range" id="sl-pulse" min="0.2" max="2.5" step="0.1" value="0.7"
+      oninput="p.pulseRate=+this.value; mat&&(mat.uniforms.uPulseRate.value=p.pulseRate)">
+    <label style="margin-top:10px">Fließgeschw.</label>
+    <input type="range" id="sl-speed" min="0.5" max="4.0" step="0.1" value="1.6" oninput="p.flowSpeed=+this.value">
+  </div>
+  <div class="ctrl-card">
+    <div class="ctrl-row">
+      <button class="ctrl-btn primary" onclick="openQuiz()">🧠 Quiz</button>
+      <button class="ctrl-btn" id="rot-btn" onclick="toggleRot()">⏸ Pause</button>
+    </div>
+    <div class="ctrl-row" style="margin-top:7px">
+      <button class="ctrl-btn" onclick="saveShot()">📷 Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- QUIZ OVERLAY -->
+<div id="quiz-overlay">
+  <div id="quiz-panel">
+    <button class="quiz-close" onclick="closeQuiz()">✕</button>
+
+    <!-- Intro -->
+    <div id="qv-intro" class="intro-screen">
+      <div class="intro-icon">🔬</div>
+      <div class="intro-h">Cellular Knowledge Quiz</div>
+      <p class="intro-p">5 Fragen rund um natürliche Gesundheit, Vitalstoffe und Sportwissenschaft –
+        direkt aus den TRHI-Artikeln.</p>
+      <button class="start-btn" onclick="startQuiz()">Quiz starten →</button>
+    </div>
+
+    <!-- Question -->
+    <div id="qv-question" style="display:none">
+      <div class="quiz-counter" id="q-counter"></div>
+      <div class="quiz-progress-wrap"><div class="quiz-progress-fill" id="q-prog"></div></div>
+      <div class="q-text" id="q-text"></div>
+      <div class="options" id="q-opts"></div>
+      <div class="feedback" id="q-fb"></div>
+      <button class="next-btn" id="q-next" onclick="nextQ()">Weiter →</button>
+    </div>
+
+    <!-- Result -->
+    <div class="result-screen" id="qv-result">
+      <div class="score-ring"><span id="r-score"></span></div>
+      <div class="r-title" id="r-title"></div>
+      <div class="r-desc"  id="r-desc"></div>
+      <div class="result-btns">
+        <button class="result-btn primary"   onclick="retryQuiz()">🔄 Nochmal</button>
+        <button class="result-btn secondary" onclick="shareResult()">📣 Teilen</button>
+        <button class="result-btn ghost"     onclick="closeQuiz()">✕ Schließen</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+'use strict';
+
+// ═══════════════════════════════════════════════════════
+// QUIZ DATA — 5 TRHI Health Questions
+// ═══════════════════════════════════════════════════════
+const QS = [
+  {
+    q: 'Was ist ATP und welche Rolle spielt es in deinem Körper?',
+    opts:['Ein Wachstumshormon','Der universelle Energieträger aller Körperzellen','Ein Verdauungsenzym für Fette','Ein Antikörper des Immunsystems'],
+    c: 1,
+    exp:'✅ ATP (Adenosintriphosphat) ist die Energiewährung aller Zellen. Es entsteht in den Mitochondrien und treibt jede Muskelbewegung, jeden Gedanken und jeden Heilungsprozess an — daher der Name „zelluläre Resonanz".'
+  },
+  {
+    q: 'Was zeigt die BMJ-Medicine-Studie 2026 über Sportvielfalt und Sterblichkeit?',
+    opts:['Nur Marathon reduziert das Sterblichkeitsrisiko wirklich','Die Sportart spielt keine Rolle – nur die Gesamtdauer zählt','Wer mehrere Sportarten kombiniert, lebt länger als bei gleichem Umfang einer Sportart','HIIT ist allen anderen Formen klar überlegen'],
+    c: 2,
+    exp:'✅ Die Studie mit 111.000 Teilnehmern über 30 Jahre: Sportliche Vielfalt (Ausdauer + Kraft + Koordination) ist ein eigenständiger Schutzfaktor – unabhängig vom Gesamtumfang der Bewegung.'
+  },
+  {
+    q: 'Warum empfehlen Experten Vitamin D3 gemeinsam mit Vitamin K2?',
+    opts:['K2 verhindert D3-Überdosierung','K2 verbessert nur Geschmack und Bioverfügbarkeit','K2 lenkt das durch D3 aufgenommene Kalzium in Knochen statt in Arterienwände','Beide steigern zusammen die Serotonin-Produktion'],
+    c: 2,
+    exp:'✅ Vitamin D3 erhöht die Kalziumaufnahme. K2 (MK-7) aktiviert Proteine, die Kalzium gezielt in Knochen einlagern und aus Gefäßwänden fernhalten. Dieser Synergismus ist medizinisch gut belegt.'
+  },
+  {
+    q: 'Was zeigt die UK Biobank-Studie (2025/26) über Fitness und Demenz?',
+    opts:['Nur genetische Faktoren bestimmen das Demenzrisiko','Körperliche Inaktivität erklärt ~26 % aller Demenzfälle','Geistige Aktivität schützt besser als körperliche','Demenz ist ab 65 durch Bewegung nicht mehr beeinflussbar'],
+    c: 1,
+    exp:'✅ Schlechte körperliche Fitness erklärt ~26 % der Demenzfälle über neuroinflammatorische und neurovaskuläre Pfade. Regelmäßige Bewegung ist eine der effektivsten Präventionsstrategien überhaupt.'
+  },
+  {
+    q: 'Welche Lebensmittelgruppe ist die beste natürliche Quelle für Vitamin D?',
+    opts:['Grünes Blattgemüse (Spinat, Grünkohl)','Milchprodukte (Joghurt, Käse)','Vollkorngetreide und Hülsenfrüchte','Fettreicher Fisch (Lachs, Makrele, Hering)'],
+    c: 3,
+    exp:'✅ 100 g Lachs liefern 600–1.000 IE Vitamin D — mehr als jedes andere natürliche Lebensmittel. Milchprodukte enthalten kaum Vitamin D (außer angereicherte Produkte). In Mitteleuropa reicht Ernährung allein meist nicht.'
+  }
+];
+
+// ═══════════════════════════════════════════════════════
+// QUIZ LOGIC
+// ═══════════════════════════════════════════════════════
+let qIdx=0, qScore=0, qAnswered=false;
+
+function openQuiz()  { document.getElementById('quiz-overlay').classList.add('active'); }
+function closeQuiz() { document.getElementById('quiz-overlay').classList.remove('active'); }
+
+function startQuiz() {
+  qIdx=0; qScore=0;
+  show('qv-intro',false); show('qv-result',false); show('qv-question',true);
+  renderQ();
+}
+
+function renderQ() {
+  qAnswered = false;
+  const q=QS[qIdx], tot=QS.length;
+  el('q-counter').textContent = `Frage ${qIdx+1} von ${tot}`;
+  el('q-prog').style.width    = `${((qIdx+1)/tot)*100}%`;
+  el('q-text').textContent    = q.q;
+  const fb=el('q-fb'), nxt=el('q-next');
+  fb.className='feedback'; fb.textContent='';
+  nxt.className='next-btn';
+
+  const opts=el('q-opts'); opts.innerHTML='';
+  q.opts.forEach((txt,i)=>{
+    const b=document.createElement('button');
+    b.className='opt-btn'; b.textContent=txt;
+    b.onclick=()=>pick(i,b);
+    opts.appendChild(b);
+  });
+}
+
+function pick(idx,btn) {
+  if(qAnswered) return;
+  qAnswered=true;
+  const q=QS[qIdx];
+  const all=document.querySelectorAll('.opt-btn');
+  all.forEach(b=>b.disabled=true);
+  const fb=el('q-fb'), nxt=el('q-next');
+  if(idx===q.c){
+    qScore++;
+    btn.classList.add('correct');
+    fb.textContent=q.exp; fb.className='feedback correct show';
+  } else {
+    btn.classList.add('wrong');
+    all[q.c].classList.add('correct');
+    fb.textContent='❌ Nicht ganz. '+q.exp.replace('✅ ','');
+    fb.className='feedback wrong show';
+  }
+  nxt.textContent = qIdx<QS.length-1 ? 'Nächste Frage →' : 'Ergebnis 🎯';
+  nxt.classList.add('show');
+}
+
+function nextQ() {
+  if(++qIdx < QS.length) renderQ();
+  else showResult();
+}
+
+function showResult(){
+  show('qv-question',false);
+  const rs=el('qv-result'); rs.classList.add('show');
+  el('r-score').textContent=`${qScore}/${QS.length}`;
+  const pct=qScore/QS.length;
+  let t,d;
+  if(pct===1){t='🏆 Perfekt — Zell-Biologe des Jahres!'; d='Alle 5 Fragen richtig. Du hast die TRHI-Inhalte vollständig verinnerlicht!';}
+  else if(pct>=.6){t='🌿 Sehr gut — solides Gesundheitswissen!'; d=`${qScore} von 5 richtig. Lies nochmal die TRHI-Artikel zu den verpassten Fragen.`;}
+  else{t='💡 Guter Start — da geht noch was!'; d='Alle Antworten stecken in den TRHI-Blog-Posts. Ein zweiter Versuch lohnt sich!';}
+  el('r-title').textContent=t; el('r-desc').textContent=d;
+}
+
+function retryQuiz(){ el('qv-result').classList.remove('show'); startQuiz(); }
+
+function shareResult(){
+  const txt=`Ich habe ${qScore}/${QS.length} Punkte im TRHI Cellular Resonance Quiz! 🔬🌿`;
+  if(navigator.share) navigator.share({title:'TRHI Health Quiz',text:txt,url:location.href});
+  else navigator.clipboard.writeText(txt+'\n'+location.href).then(()=>alert('Link kopiert!')).catch(()=>alert(txt));
+}
+
+function el(id){ return document.getElementById(id); }
+function show(id,v){ el(id).style.display=v?'block':'none'; }
+
+// ═══════════════════════════════════════════════════════
+// THREE.JS — 3D Particle System
+// ═══════════════════════════════════════════════════════
+const canvas   = document.getElementById('three-canvas');
+const renderer = new THREE.WebGLRenderer({canvas, antialias:true, alpha:true, preserveDrawingBuffer:true});
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+renderer.setSize(innerWidth, innerHeight);
+renderer.setClearColor(0x080f0a, 1);
+
+const scene  = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(72, innerWidth/innerHeight, 0.1, 500);
+camera.position.set(0,0,70);
+
+scene.add(new THREE.AmbientLight(0x0a1a0f, 0.5));
+const lt1=new THREE.PointLight(0x52b788,2.5,130);
+const lt2=new THREE.PointLight(0xf4a261,2.0,110);
+scene.add(lt1,lt2);
+
+// Wireframe organelles
+const org1=new THREE.Mesh(
+  new THREE.IcosahedronGeometry(18,2),
+  new THREE.MeshBasicMaterial({color:0x52b788,wireframe:true,transparent:true,opacity:.06})
+);
+const org2=new THREE.Mesh(
+  new THREE.TorusGeometry(30,1,8,64),
+  new THREE.MeshBasicMaterial({color:0x2d6a4f,wireframe:true,transparent:true,opacity:.045})
+);
+scene.add(org1,org2);
+
+// ── Params ──
+const p = { seed:7842, N:7000, pulseRate:.7, flowSpeed:1.6, autoRot:true };
+
+// Seeded PRNG (Mulberry32)
+function mkRng(seed) {
+  let s=seed>>>0;
+  return ()=>{ s|=0; s=s+0x6D2B79F5|0; let t=Math.imul(s^s>>>15,1|s); t=t+Math.imul(t^t>>>7,61|t)^t; return((t^t>>>14)>>>0)/4294967296; };
+}
+
+let geo, mat;
+const VEL = new Float32Array(12001*3); // max N*3
+
+function buildPts() {
+  if(geo){ const old=scene.getObjectByName('pts'); if(old) scene.remove(old); geo.dispose(); }
+  if(mat) mat.dispose();
+  VEL.fill(0);
+
+  const rng=mkRng(p.seed), N=p.N;
+  const pos=new Float32Array(N*3), spd=new Float32Array(N), pha=new Float32Array(N);
+  for(let i=0;i<N;i++){
+    const th=rng()*Math.PI*2, ph=Math.acos(rng()*2-1), r=Math.pow(rng(),.4)*45;
+    pos[i*3]=r*Math.sin(ph)*Math.cos(th); pos[i*3+1]=r*Math.sin(ph)*Math.sin(th); pos[i*3+2]=r*Math.cos(ph);
+    spd[i]=rng(); pha[i]=rng()*Math.PI*2;
+  }
+  geo=new THREE.BufferGeometry();
+  geo.setAttribute('position',new THREE.BufferAttribute(pos,3));
+  geo.setAttribute('aSpeed',  new THREE.BufferAttribute(spd,1));
+  geo.setAttribute('aPhase',  new THREE.BufferAttribute(pha,1));
+
+  mat=new THREE.ShaderMaterial({
+    vertexShader:  document.getElementById('vert-src').textContent,
+    fragmentShader:document.getElementById('frag-src').textContent,
+    uniforms:{
+      uTime:     {value:0},
+      uPulseRate:{value:p.pulseRate},
+      uC0:{value:new THREE.Color(0x1b4332)},
+      uC1:{value:new THREE.Color(0x52b788)},
+      uC2:{value:new THREE.Color(0xf4a261)}
+    },
+    blending:THREE.AdditiveBlending, depthWrite:false, transparent:true
+  });
+
+  const pts=new THREE.Points(geo,mat); pts.name='pts'; scene.add(pts);
+  el('seed-display').textContent=`Seed: ${p.seed}`;
+}
+buildPts();
+
+// ── Flow Field ──
+function flow(x,y,z,t){
+  const s=.055,t1=t*.28,t2=t*.19,t3=t*.34;
+  return{
+    x:Math.sin(y*s+t1)*Math.cos(z*s*.7+t2),
+    y:Math.sin(z*s+t2)*Math.cos(x*s*.7+t3),
+    z:Math.sin(x*s+t3)*Math.cos(y*s*.7+t1)
+  };
+}
+
+function updatePts(t){
+  const pos=geo.attributes.position.array, spd=geo.attributes.aSpeed.array, N=p.N;
+  const dt=.016*p.flowSpeed;
+  for(let i=0;i<N;i++){
+    const xi=i*3;
+    const x=pos[xi],y=pos[xi+1],z=pos[xi+2];
+    const f=flow(x,y,z,t);
+    VEL[xi]  =VEL[xi]  *.92+f.x*.28;
+    VEL[xi+1]=VEL[xi+1]*.92+f.y*.28;
+    VEL[xi+2]=VEL[xi+2]*.92+f.z*.28;
+    pos[xi]  +=VEL[xi]  *dt;
+    pos[xi+1]+=VEL[xi+1]*dt;
+    pos[xi+2]+=VEL[xi+2]*dt;
+    if(x*x+y*y+z*z>2500){ pos[xi]*=.97; pos[xi+1]*=.97; pos[xi+2]*=.97; }
+    spd[i]=Math.min(Math.sqrt(VEL[xi]**2+VEL[xi+1]**2+VEL[xi+2]**2)/(.35*p.flowSpeed),1);
+  }
+  geo.attributes.position.needsUpdate=true;
+  geo.attributes.aSpeed.needsUpdate=true;
+}
+
+// ── Animate ──
+let frame=0, camTheta=0;
+(function animate(){
+  requestAnimationFrame(animate);
+  frame++;
+  updatePts(frame);
+  mat.uniforms.uTime.value=frame;
+  lt1.position.set(35*Math.cos(frame*.006), 20*Math.sin(frame*.004), 15);
+  lt2.position.set(-25*Math.cos(frame*.005+1.2), -15*Math.sin(frame*.007), 20);
+  org1.rotation.x+=.0006; org1.rotation.y+=.0009;
+  org2.rotation.x+=.0004; org2.rotation.z+=.0007;
+  if(p.autoRot){ camTheta+=.0012; camera.position.x=Math.sin(camTheta)*70; camera.position.z=Math.cos(camTheta)*70; camera.lookAt(0,0,0); }
+  renderer.render(scene,camera);
+})();
+
+// ── Seed controls ──
+function prevSeed(){ p.seed=Math.max(1,p.seed-1); buildPts(); }
+function nextSeed(){ p.seed++; buildPts(); }
+function randSeed(){ p.seed=Math.floor(Math.random()*999999)+1; buildPts(); }
+function onDensity(v){ p.N=v; buildPts(); }
+function toggleRot(){ p.autoRot=!p.autoRot; el('rot-btn').textContent=p.autoRot?'⏸ Pause':'▶ Play'; }
+function saveShot(){ renderer.render(scene,camera); const a=document.createElement('a'); a.href=renderer.domElement.toDataURL('image/png'); a.download=`cellular-resonance-${p.seed}.png`; a.click(); }
+
+window.addEventListener('resize',()=>{ camera.aspect=innerWidth/innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth,innerHeight); });
+</script>
+</body>
+</html>

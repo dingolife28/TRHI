@@ -1,0 +1,200 @@
+import 'package:flutter/material.dart';
+import '../theme/app_colors.dart';
+import '../theme/app_text_styles.dart';
+import '../theme/app_theme.dart';
+import '../theme/copy.dart';
+import 'mandala_layer.dart';
+
+class AboutSection extends StatelessWidget {
+  final ScrollController? scrollController;
+  const AboutSection({super.key, this.scrollController});
+
+  @override
+  Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    final isMobile = width < Breakpoints.tablet;
+
+    return Container(
+      color: AppColors.canvasDark,
+      width: double.infinity,
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          Positioned(
+            right: -80,
+            top: 0,
+            bottom: 0,
+            child: MandalaLayer(
+              opacity: 0.08,
+              size: 800,
+              initialRotationDeg: 120,
+              rotationSpeedSec: 100,
+              clockwise: true,
+              invert: true,
+              scrollController: scrollController,
+              parallaxFactor: 0.20,
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: isMobile ? AppSpacing.xl : AppSpacing.band,
+              vertical: AppSpacing.band,
+            ),
+            child: isMobile
+                ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _Left(),
+                      const SizedBox(height: AppSpacing.band),
+                      _Right(),
+                    ],
+                  )
+                : Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(child: _Left()),
+                      const SizedBox(width: AppSpacing.band),
+                      Expanded(child: _Right()),
+                    ],
+                  ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _Left extends StatefulWidget {
+  @override
+  State<_Left> createState() => _LeftState();
+}
+
+class _LeftState extends State<_Left> {
+  bool _open = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Über TRHI',
+            style: AppTextStyles.eyebrow.copyWith(
+                color: AppColors.brand, letterSpacing: 1.5)),
+        const SizedBox(height: AppSpacing.lg),
+
+        Text(TrhiCopy.aboutTitle,
+            style: AppTextStyles.displayLG.copyWith(color: AppColors.onDark)),
+        const SizedBox(height: AppSpacing.xxl),
+
+        Text(TrhiCopy.aboutBody,
+            style: AppTextStyles.bodyLG.copyWith(color: AppColors.onDarkMuted)),
+        const SizedBox(height: AppSpacing.xxl),
+
+        Container(
+          padding: const EdgeInsets.only(left: AppSpacing.lg),
+          decoration: const BoxDecoration(
+            border: Border(left: BorderSide(color: AppColors.brand, width: 3)),
+          ),
+          child: Text(TrhiCopy.aboutQuote,
+              style: AppTextStyles.bodyLG.copyWith(
+                  color: AppColors.onDark, fontStyle: FontStyle.italic)),
+        ),
+
+        const SizedBox(height: AppSpacing.xxl),
+
+        GestureDetector(
+          onTap: () => setState(() => _open = !_open),
+          child: Row(children: [
+            Text('Rechtlicher Hinweis',
+                style: AppTextStyles.bodySM.copyWith(color: AppColors.stone)),
+            const SizedBox(width: AppSpacing.sm),
+            Icon(_open ? Icons.expand_less : Icons.expand_more,
+                color: AppColors.stone, size: 18),
+          ]),
+        ),
+        if (_open) ...[
+          const SizedBox(height: AppSpacing.lg),
+          Text(TrhiCopy.disclaimer,
+              style: AppTextStyles.caption.copyWith(color: AppColors.stone)),
+        ],
+      ],
+    );
+  }
+}
+
+class _Right extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(AppSpacing.xxl),
+          decoration: BoxDecoration(
+            color: AppColors.surfaceElevated,
+            borderRadius: AppRadius.lg,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(children: [
+                Text('TRHI',
+                    style: AppTextStyles.headingMD.copyWith(
+                        color: AppColors.brand)),
+                const SizedBox(width: AppSpacing.sm),
+                Text('The Real Health Insurance',
+                    style: AppTextStyles.label.copyWith(
+                        color: AppColors.onDarkMuted)),
+              ]),
+              const SizedBox(height: AppSpacing.xl),
+              Text(TrhiCopy.trhiMotto,
+                  style: AppTextStyles.bodyLG.copyWith(
+                      color: AppColors.onDark, fontStyle: FontStyle.italic)),
+            ],
+          ),
+        ),
+
+        const SizedBox(height: AppSpacing.xl),
+
+        Row(children: [
+          Expanded(child: _AudienceCard('🧑‍💼', 'Berufstätige', '25 min täglich reichen.')),
+          const SizedBox(width: AppSpacing.lg),
+          Expanded(child: _AudienceCard('👨‍👩‍👧', 'Eltern', 'Erst für dich, dann für andere.')),
+          const SizedBox(width: AppSpacing.lg),
+          Expanded(child: _AudienceCard('🧓', '50+', 'Nie zu spät.')),
+        ]),
+      ],
+    );
+  }
+}
+
+class _AudienceCard extends StatelessWidget {
+  final String emoji;
+  final String title;
+  final String body;
+  const _AudienceCard(this.emoji, this.title, this.body);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(AppSpacing.lg),
+      decoration: BoxDecoration(
+        color: AppColors.surfaceElevated,
+        borderRadius: AppRadius.md,
+        border: Border.all(color: AppColors.hairlineDark),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(emoji, style: const TextStyle(fontSize: 24)),
+          const SizedBox(height: AppSpacing.sm),
+          Text(title,
+              style: AppTextStyles.headingSM.copyWith(color: AppColors.onDark)),
+          const SizedBox(height: AppSpacing.xs),
+          Text(body,
+              style: AppTextStyles.caption.copyWith(color: AppColors.stone)),
+        ],
+      ),
+    );
+  }
+}

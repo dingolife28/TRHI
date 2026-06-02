@@ -1,0 +1,20 @@
+rules_version = '2';
+
+// Sicherheitsregeln für Cloud Firestore (Projekt: trhi-app).
+// Nur das öffentliche Buchungsformular darf Einträge ANLEGEN; Lesen/Ändern/
+// Löschen ist von außen gesperrt (nur über die Firebase-Konsole / Admin-SDK).
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    match /bookings/{id} {
+      allow create: if true;
+      allow read: if request.auth.uid != null && request.auth.uid == resource.data.uid;
+      allow update, delete: if false;
+    }
+
+    // Alles andere standardmäßig verboten.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
