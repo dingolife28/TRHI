@@ -120,6 +120,9 @@ class _BookingFormState extends State<BookingForm> {
     InputDecoration dec(String label, {String? hint}) => InputDecoration(
       labelText: label,
       hintText: hint,
+      floatingLabelBehavior: hint != null
+          ? FloatingLabelBehavior.always
+          : FloatingLabelBehavior.auto,
       labelStyle: AppTextStyles.label.copyWith(color: mutedColor),
       hintStyle: AppTextStyles.caption.copyWith(color: mutedColor),
       filled: true,
@@ -240,7 +243,7 @@ class _BookingFormState extends State<BookingForm> {
             if (isMobile) ...[
               TextFormField(
                 controller: _age,
-                decoration: dec('Alter', hint: '16–99'),
+                decoration: dec('Alter', hint: 'z.B. 34'),
                 keyboardType: TextInputType.number,
                 style: AppTextStyles.bodyMD.copyWith(color: textColor),
               ),
@@ -248,14 +251,14 @@ class _BookingFormState extends State<BookingForm> {
               Row(children: [
                 Expanded(child: TextFormField(
                   controller: _height,
-                  decoration: dec('Größe (cm)', hint: '140–220'),
+                  decoration: dec('Größe (cm)', hint: 'z.B. 178'),
                   keyboardType: TextInputType.number,
                   style: AppTextStyles.bodyMD.copyWith(color: textColor),
                 )),
                 const SizedBox(width: AppSpacing.lg),
                 Expanded(child: TextFormField(
                   controller: _weight,
-                  decoration: dec('Gewicht (kg)', hint: '40–200'),
+                  decoration: dec('Gewicht (kg)', hint: 'z.B. 75'),
                   keyboardType: TextInputType.number,
                   style: AppTextStyles.bodyMD.copyWith(color: textColor),
                 )),
@@ -264,21 +267,21 @@ class _BookingFormState extends State<BookingForm> {
               Row(children: [
                 Expanded(child: TextFormField(
                   controller: _age,
-                  decoration: dec('Alter', hint: '16–99'),
+                  decoration: dec('Alter', hint: 'z.B. 34'),
                   keyboardType: TextInputType.number,
                   style: AppTextStyles.bodyMD.copyWith(color: textColor),
                 )),
                 const SizedBox(width: AppSpacing.lg),
                 Expanded(child: TextFormField(
                   controller: _height,
-                  decoration: dec('Größe (cm)', hint: '140–220'),
+                  decoration: dec('Größe (cm)', hint: 'z.B. 178'),
                   keyboardType: TextInputType.number,
                   style: AppTextStyles.bodyMD.copyWith(color: textColor),
                 )),
                 const SizedBox(width: AppSpacing.lg),
                 Expanded(child: TextFormField(
                   controller: _weight,
-                  decoration: dec('Gewicht (kg)', hint: '40–200'),
+                  decoration: dec('Gewicht (kg)', hint: 'z.B. 75'),
                   keyboardType: TextInputType.number,
                   style: AppTextStyles.bodyMD.copyWith(color: textColor),
                 )),
