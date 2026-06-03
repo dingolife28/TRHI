@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_theme.dart';
+import '../theme/app_text_styles.dart';
 import '../widgets/booking_left.dart';
 import '../widgets/booking_form.dart';
 
@@ -35,8 +36,22 @@ class _BookingScreenState extends State<BookingScreen> {
     if (isMobile) {
       return Scaffold(
         backgroundColor: AppColors.canvasDark,
-        body: SingleChildScrollView(
-          child: Column(children: [left, form]),
+        appBar: AppBar(
+          backgroundColor: AppColors.canvasDark,
+          elevation: 0,
+          leading: BackButton(color: AppColors.onDark),
+          title: Text('Termin anfragen',
+              style: AppTextStyles.headingSM.copyWith(color: AppColors.onDark)),
+          bottom: PreferredSize(
+            preferredSize: const Size.fromHeight(1),
+            child: Divider(color: AppColors.hairlineDark, height: 1),
+          ),
+        ),
+        body: SafeArea(
+          top: false,
+          child: SingleChildScrollView(
+            child: Column(children: [left, form]),
+          ),
         ),
       );
     }

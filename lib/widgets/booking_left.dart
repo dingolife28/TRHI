@@ -29,8 +29,9 @@ class BookingLeft extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isMobile = MediaQuery.of(context).size.width < Breakpoints.tablet;
     return Padding(
-      padding: const EdgeInsets.all(AppSpacing.band),
+      padding: EdgeInsets.all(isMobile ? AppSpacing.xl : AppSpacing.band),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

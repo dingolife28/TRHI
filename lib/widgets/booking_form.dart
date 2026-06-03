@@ -132,8 +132,9 @@ class _BookingFormState extends State<BookingForm> {
           horizontal: AppSpacing.lg, vertical: AppSpacing.md),
     );
 
+    final isMobile = !isLight;
     return Padding(
-      padding: const EdgeInsets.all(AppSpacing.band),
+      padding: EdgeInsets.all(isMobile ? AppSpacing.xl : AppSpacing.band),
       child: Form(
         key: _formKey,
         child: Column(
@@ -142,21 +143,36 @@ class _BookingFormState extends State<BookingForm> {
             _SectionLabel('Persönliche Daten', textColor),
             const SizedBox(height: AppSpacing.lg),
 
-            Row(children: [
-              Expanded(child: TextFormField(
+            if (isMobile) ...[
+              TextFormField(
                 controller: _firstName,
                 decoration: dec('Vorname *'),
                 style: AppTextStyles.bodyMD.copyWith(color: textColor),
                 validator: (v) => (v == null || v.isEmpty) ? 'Pflichtfeld' : null,
-              )),
-              const SizedBox(width: AppSpacing.lg),
-              Expanded(child: TextFormField(
+              ),
+              const SizedBox(height: AppSpacing.lg),
+              TextFormField(
                 controller: _lastName,
                 decoration: dec('Nachname *'),
                 style: AppTextStyles.bodyMD.copyWith(color: textColor),
                 validator: (v) => (v == null || v.isEmpty) ? 'Pflichtfeld' : null,
-              )),
-            ]),
+              ),
+            ] else
+              Row(children: [
+                Expanded(child: TextFormField(
+                  controller: _firstName,
+                  decoration: dec('Vorname *'),
+                  style: AppTextStyles.bodyMD.copyWith(color: textColor),
+                  validator: (v) => (v == null || v.isEmpty) ? 'Pflichtfeld' : null,
+                )),
+                const SizedBox(width: AppSpacing.lg),
+                Expanded(child: TextFormField(
+                  controller: _lastName,
+                  decoration: dec('Nachname *'),
+                  style: AppTextStyles.bodyMD.copyWith(color: textColor),
+                  validator: (v) => (v == null || v.isEmpty) ? 'Pflichtfeld' : null,
+                )),
+              ]),
             const SizedBox(height: AppSpacing.lg),
 
             TextFormField(
@@ -221,28 +237,52 @@ class _BookingFormState extends State<BookingForm> {
             _SectionLabel('Körperdaten', textColor),
             const SizedBox(height: AppSpacing.lg),
 
-            Row(children: [
-              Expanded(child: TextFormField(
+            if (isMobile) ...[
+              TextFormField(
                 controller: _age,
                 decoration: dec('Alter', hint: '16–99'),
                 keyboardType: TextInputType.number,
                 style: AppTextStyles.bodyMD.copyWith(color: textColor),
-              )),
-              const SizedBox(width: AppSpacing.lg),
-              Expanded(child: TextFormField(
-                controller: _height,
-                decoration: dec('Größe (cm)', hint: '140–220'),
-                keyboardType: TextInputType.number,
-                style: AppTextStyles.bodyMD.copyWith(color: textColor),
-              )),
-              const SizedBox(width: AppSpacing.lg),
-              Expanded(child: TextFormField(
-                controller: _weight,
-                decoration: dec('Gewicht (kg)', hint: '40–200'),
-                keyboardType: TextInputType.number,
-                style: AppTextStyles.bodyMD.copyWith(color: textColor),
-              )),
-            ]),
+              ),
+              const SizedBox(height: AppSpacing.lg),
+              Row(children: [
+                Expanded(child: TextFormField(
+                  controller: _height,
+                  decoration: dec('Größe (cm)', hint: '140–220'),
+                  keyboardType: TextInputType.number,
+                  style: AppTextStyles.bodyMD.copyWith(color: textColor),
+                )),
+                const SizedBox(width: AppSpacing.lg),
+                Expanded(child: TextFormField(
+                  controller: _weight,
+                  decoration: dec('Gewicht (kg)', hint: '40–200'),
+                  keyboardType: TextInputType.number,
+                  style: AppTextStyles.bodyMD.copyWith(color: textColor),
+                )),
+              ]),
+            ] else
+              Row(children: [
+                Expanded(child: TextFormField(
+                  controller: _age,
+                  decoration: dec('Alter', hint: '16–99'),
+                  keyboardType: TextInputType.number,
+                  style: AppTextStyles.bodyMD.copyWith(color: textColor),
+                )),
+                const SizedBox(width: AppSpacing.lg),
+                Expanded(child: TextFormField(
+                  controller: _height,
+                  decoration: dec('Größe (cm)', hint: '140–220'),
+                  keyboardType: TextInputType.number,
+                  style: AppTextStyles.bodyMD.copyWith(color: textColor),
+                )),
+                const SizedBox(width: AppSpacing.lg),
+                Expanded(child: TextFormField(
+                  controller: _weight,
+                  decoration: dec('Gewicht (kg)', hint: '40–200'),
+                  keyboardType: TextInputType.number,
+                  style: AppTextStyles.bodyMD.copyWith(color: textColor),
+                )),
+              ]),
             const SizedBox(height: AppSpacing.lg),
 
             TextFormField(
@@ -316,8 +356,8 @@ class _BookingFormState extends State<BookingForm> {
               child: FilledButton(
                 onPressed: (_loading || !_privacyAccepted) ? null : _submit,
                 style: FilledButton.styleFrom(
-                  backgroundColor: AppColors.canvasDark,
-                  foregroundColor: AppColors.onDark,
+                  backgroundColor: isMobile ? AppColors.canvasLight : AppColors.canvasDark,
+                  foregroundColor: isMobile ? AppColors.canvasDark : AppColors.onDark,
                   disabledBackgroundColor: AppColors.stone,
                   shape: RoundedRectangleBorder(borderRadius: AppRadius.md),
                   textStyle: AppTextStyles.buttonLG,
