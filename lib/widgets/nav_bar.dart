@@ -32,28 +32,19 @@ class TrhiNavBar extends StatelessWidget {
               child: Row(
                 children: [
                   Image.asset('assets/trhi_logo.png',
-                      width: isNarrow ? 40 : 44, height: isNarrow ? 40 : 44,
+                      width: isNarrow ? 46 : 52, height: isNarrow ? 46 : 52,
                       color: AppColors.onDark),
-                  const SizedBox(width: AppSpacing.sm),
+                  const SizedBox(width: AppSpacing.md),
+                  // Nur noch der Schriftzug — die Wortmarke "TRHI" steckt bereits
+                  // im Logo. Ellipsis als Sicherheitsnetz auf schmalen Screens.
                   Flexible(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('TRHI',
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: AppTextStyles.headingSM.copyWith(
-                                color: AppColors.onDark)),
-                        Text('The Real Health Insurance',
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: AppTextStyles.eyebrow.copyWith(
-                                color: AppColors.brand,
-                                fontSize: isNarrow ? 9 : 11,
-                                letterSpacing: isNarrow ? 0.3 : 1.5)),
-                      ],
-                    ),
+                    child: Text('The Real Health Insurance',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppTextStyles.eyebrow.copyWith(
+                            color: AppColors.brand,
+                            fontSize: isNarrow ? 11 : 13,
+                            letterSpacing: isNarrow ? 0.3 : 1.2)),
                   ),
                 ],
               ),
@@ -77,10 +68,10 @@ class TrhiNavBar extends StatelessWidget {
                 backgroundColor: AppColors.canvasLight,
                 foregroundColor: AppColors.canvasDark,
                 padding: EdgeInsets.symmetric(
-                    horizontal: isNarrow ? AppSpacing.lg : AppSpacing.xxl,
-                    vertical: AppSpacing.md),
+                    horizontal: isNarrow ? AppSpacing.md : AppSpacing.xl,
+                    vertical: AppSpacing.sm),
                 shape: const StadiumBorder(),
-                textStyle: AppTextStyles.buttonLG,
+                textStyle: AppTextStyles.buttonSM,
               ),
               child: const Text('Erstgespräch'),
             ),
