@@ -13,19 +13,13 @@ class FooterWidget extends StatelessWidget {
     final isMobile = MediaQuery.of(context).size.width < Breakpoints.tablet;
 
     // ── Footer-Bausteine (für Desktop-Row und Mobile-Column identisch) ──
-    final brand = Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Image.asset('assets/trhi_logo.png',
-            width: 32, height: 32,
-            color: AppColors.onDark,
-            errorBuilder: (context, error, stack) => const Icon(
-                Icons.fitness_center, color: AppColors.onDark, size: 32)),
-        const SizedBox(width: AppSpacing.sm),
-        Text('TRHI',
-            style: AppTextStyles.headingSM.copyWith(color: AppColors.onDark)),
-      ],
-    );
+    // Nur das (leicht vergrößerte) Logo — "TRHI" als Text entfällt
+    // (Wortmarke steckt bereits im Logo).
+    final brand = Image.asset('assets/trhi_logo.png',
+        width: 44, height: 44,
+        color: AppColors.onDark,
+        errorBuilder: (context, error, stack) => const Icon(
+            Icons.fitness_center, color: AppColors.onDark, size: 44));
 
     final tagline = Text('Move · Mind · Nourish',
         style: AppTextStyles.caption.copyWith(color: AppColors.stone));
@@ -34,18 +28,24 @@ class FooterWidget extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        QrImageView(
-          data: 'https://trhi.net',
-          version: QrVersions.auto,
-          size: 72,
-          backgroundColor: Colors.white,
-          eyeStyle: const QrEyeStyle(
-            eyeShape: QrEyeShape.square,
-            color: Colors.black,
-          ),
-          dataModuleStyle: const QrDataModuleStyle(
-            dataModuleShape: QrDataModuleShape.square,
-            color: Colors.black,
+        // Festes quadratisches Feld + QR ohne `size` füllt es vollständig —
+        // verhindert das vertikale Abschneiden des Codes.
+        SizedBox(
+          width: 84,
+          height: 84,
+          child: QrImageView(
+            data: 'https://trhi.net',
+            version: QrVersions.auto,
+            padding: const EdgeInsets.all(8),
+            backgroundColor: Colors.white,
+            eyeStyle: const QrEyeStyle(
+              eyeShape: QrEyeShape.square,
+              color: Colors.black,
+            ),
+            dataModuleStyle: const QrDataModuleStyle(
+              dataModuleShape: QrDataModuleShape.square,
+              color: Colors.black,
+            ),
           ),
         ),
         const SizedBox(height: AppSpacing.xs),
