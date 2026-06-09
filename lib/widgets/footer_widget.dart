@@ -10,6 +10,53 @@ class FooterWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isMobile = MediaQuery.of(context).size.width < Breakpoints.tablet;
+
+    // ── Footer-Bausteine (für Desktop-Row und Mobile-Column identisch) ──
+    final brand = Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Image.asset('assets/trhi_logo.png',
+            width: 32, height: 32,
+            color: AppColors.onDark,
+            errorBuilder: (context, error, stack) => const Icon(
+                Icons.fitness_center, color: AppColors.onDark, size: 32)),
+        const SizedBox(width: AppSpacing.sm),
+        Text('TRHI',
+            style: AppTextStyles.headingSM.copyWith(color: AppColors.onDark)),
+      ],
+    );
+
+    final tagline = Text('Move · Mind · Nourish',
+        style: AppTextStyles.caption.copyWith(color: AppColors.stone));
+
+    final qr = Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        QrImageView(
+          data: 'https://trhi.net',
+          version: QrVersions.auto,
+          size: 72,
+          backgroundColor: Colors.white,
+          eyeStyle: const QrEyeStyle(
+            eyeShape: QrEyeShape.square,
+            color: Colors.black,
+          ),
+          dataModuleStyle: const QrDataModuleStyle(
+            dataModuleShape: QrDataModuleShape.square,
+            color: Colors.black,
+          ),
+        ),
+        const SizedBox(height: AppSpacing.xs),
+        Text('trhi.net',
+            style: AppTextStyles.caption.copyWith(color: AppColors.stone)),
+      ],
+    );
+
+    final copyright = Text('© 2025 TRHI',
+        style: AppTextStyles.caption.copyWith(color: AppColors.stone));
+
     return Container(
       color: AppColors.canvasDark,
       width: double.infinity,
@@ -32,57 +79,34 @@ class FooterWidget extends StatelessWidget {
             ),
           ),
           Container(
-            padding: const EdgeInsets.symmetric(
-                horizontal: AppSpacing.band, vertical: AppSpacing.xxl),
+            // Volle Breite, damit der Top-Hairline durchläuft (sonst shrink-wrap
+            // in der Stack mit losen Constraints).
+            width: double.infinity,
+            // band (120px) ist auf Mobile zu breit → auf xl (24px) reduzieren.
+            padding: EdgeInsets.symmetric(
+                horizontal: isMobile ? AppSpacing.xl : AppSpacing.band,
+                vertical: AppSpacing.xxl),
             decoration: const BoxDecoration(
               border: Border(top: BorderSide(color: AppColors.hairlineDark)),
             ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(children: [
-                  Image.asset('assets/trhi_logo.png',
-                      width: 32, height: 32,
-                      color: AppColors.onDark,
-                      errorBuilder: (context, error, stack) =>
-                          const Icon(Icons.fitness_center,
-                              color: AppColors.onDark, size: 32)),
-                  const SizedBox(width: AppSpacing.sm),
-                  Text('TRHI',
-                      style: AppTextStyles.headingSM.copyWith(
-                          color: AppColors.onDark)),
-                ]),
-                Text('Move · Mind · Nourish',
-                    style: AppTextStyles.caption.copyWith(
-                        color: AppColors.stone)),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    QrImageView(
-                      data: 'https://trhi.net',
-                      version: QrVersions.auto,
-                      size: 72,
-                      backgroundColor: Colors.white,
-                      eyeStyle: const QrEyeStyle(
-                        eyeShape: QrEyeShape.square,
-                        color: Colors.black,
-                      ),
-                      dataModuleStyle: const QrDataModuleStyle(
-                        dataModuleShape: QrDataModuleShape.square,
-                        color: Colors.black,
-                      ),
-                    ),
-                    const SizedBox(height: AppSpacing.xs),
-                    Text('trhi.net',
-                        style: AppTextStyles.caption.copyWith(
-                            color: AppColors.stone)),
-                  ],
-                ),
-                Text('© 2025 TRHI',
-                    style: AppTextStyles.caption.copyWith(
-                        color: AppColors.stone)),
-              ],
-            ),
+            // Mobile: linksbündig gestapelt (4 Items passen nicht nebeneinander).
+            child: isMobile
+                ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      brand,
+                      const SizedBox(height: AppSpacing.xl),
+                      tagline,
+                      const SizedBox(height: AppSpacing.xl),
+                      qr,
+                      const SizedBox(height: AppSpacing.xl),
+                      copyright,
+                    ],
+                  )
+                : Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [brand, tagline, qr, copyright],
+                  ),
           ),
         ],
       ),
