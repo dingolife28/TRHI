@@ -4,6 +4,7 @@ import '../theme/app_text_styles.dart';
 import '../theme/app_theme.dart';
 import '../theme/copy.dart';
 import 'mandala_layer.dart';
+import 'biopulse_background.dart';
 
 class AboutSection extends StatelessWidget {
   final ScrollController? scrollController;
@@ -20,6 +21,34 @@ class AboutSection extends StatelessWidget {
       child: Stack(
         clipBehavior: Clip.none,
         children: [
+          // Biopulse-Partikel als lebendiger Hintergrund („zweites schwarzes
+          // Feld"). Nicht-interaktiv; Scroll/Tap gehen an die UI durch.
+          const Positioned.fill(child: BiopulseBackground()),
+
+          // Lesbarkeits-Scrim: hält den text-dichten About-Block über den
+          // Partikeln lesbar, lässt die Kunst aber sichtbar atmen.
+          Positioned.fill(
+            child: IgnorePointer(
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      // Auf Mobile läuft der Fließtext volle Breite über die
+                      // hellsten Partikel — dort kräftiger abdunkeln. Desktop
+                      // (Text in linker Spalte) bleibt luftiger.
+                      AppColors.canvasDark.withValues(alpha: isMobile ? 0.70 : 0.60),
+                      AppColors.canvasDark.withValues(alpha: isMobile ? 0.62 : 0.45),
+                      AppColors.canvasDark.withValues(alpha: isMobile ? 0.74 : 0.66),
+                    ],
+                    stops: const [0.0, 0.5, 1.0],
+                  ),
+                ),
+              ),
+            ),
+          ),
+
           Positioned(
             right: -80,
             top: 0,
