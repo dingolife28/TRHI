@@ -11,6 +11,7 @@ class TrhiNavBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     final isMobile = width < Breakpoints.desktop;
+    final isNarrow = width < Breakpoints.mobile;
 
     return Positioned(
       top: 0, left: 0, right: 0,
@@ -20,31 +21,45 @@ class TrhiNavBar extends StatelessWidget {
           color: AppColors.canvasDark,
           border: Border(bottom: BorderSide(color: AppColors.hairlineDark)),
         ),
-        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xl),
+        padding: EdgeInsets.symmetric(
+            horizontal: isNarrow ? AppSpacing.lg : AppSpacing.xl),
         child: Row(
           children: [
-            // Logo + brand name
-            Row(
-              children: [
-                Image.asset('assets/trhi_logo.png', width: 44, height: 44,
-                    color: AppColors.onDark),
-                const SizedBox(width: AppSpacing.sm),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('TRHI',
-                        style: AppTextStyles.headingSM.copyWith(
-                            color: AppColors.onDark)),
-                    Text('The Real Health Insurance',
-                        style: AppTextStyles.eyebrow.copyWith(
-                            color: AppColors.brand)),
-                  ],
-                ),
-              ],
+            // Logo + brand name — Expanded, damit der CTA-Button rechts immer
+            // seinen vollen Platz behält. Auf schmalen Screens ellipsiert der
+            // Markentext, statt "Erstgespräch" abzuschneiden.
+            Expanded(
+              child: Row(
+                children: [
+                  Image.asset('assets/trhi_logo.png',
+                      width: isNarrow ? 40 : 44, height: isNarrow ? 40 : 44,
+                      color: AppColors.onDark),
+                  const SizedBox(width: AppSpacing.sm),
+                  Flexible(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('TRHI',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: AppTextStyles.headingSM.copyWith(
+                                color: AppColors.onDark)),
+                        Text('The Real Health Insurance',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: AppTextStyles.eyebrow.copyWith(
+                                color: AppColors.brand,
+                                fontSize: isNarrow ? 9 : 11,
+                                letterSpacing: isNarrow ? 0.3 : 1.5)),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
 
-            const Spacer(),
+            const SizedBox(width: AppSpacing.md),
 
             if (!isMobile) ...[
               _NavLink('Training'),
@@ -55,14 +70,15 @@ class TrhiNavBar extends StatelessWidget {
               const SizedBox(width: AppSpacing.lg),
             ],
 
-            // CTA button
+            // CTA button — immer vollständig sichtbar
             FilledButton(
               onPressed: () => context.go('/booking'),
               style: FilledButton.styleFrom(
                 backgroundColor: AppColors.canvasLight,
                 foregroundColor: AppColors.canvasDark,
-                padding: const EdgeInsets.symmetric(
-                    horizontal: AppSpacing.xxl, vertical: AppSpacing.md),
+                padding: EdgeInsets.symmetric(
+                    horizontal: isNarrow ? AppSpacing.lg : AppSpacing.xxl,
+                    vertical: AppSpacing.md),
                 shape: const StadiumBorder(),
                 textStyle: AppTextStyles.buttonLG,
               ),
