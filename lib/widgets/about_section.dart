@@ -154,6 +154,10 @@ class _LeftState extends State<_Left> {
 class _Right extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    // Schmaler als 600px: drei Karten nebeneinander werden zu eng (der Titel
+    // "Berufstätige" läuft sonst über) → vertikal stapeln.
+    final isNarrow = MediaQuery.of(context).size.width < Breakpoints.mobile;
+
     return Column(
       children: [
         Container(
@@ -185,13 +189,24 @@ class _Right extends StatelessWidget {
 
         const SizedBox(height: AppSpacing.xl),
 
-        Row(children: [
-          Expanded(child: _AudienceCard('🧑‍💼', 'Berufstätige', '25 min täglich reichen.')),
-          const SizedBox(width: AppSpacing.lg),
-          Expanded(child: _AudienceCard('👨‍👩‍👧', 'Eltern', 'Erst für dich, dann für andere.')),
-          const SizedBox(width: AppSpacing.lg),
-          Expanded(child: _AudienceCard('🧓', '50+', 'Nie zu spät.')),
-        ]),
+        isNarrow
+            ? Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  _AudienceCard('🧑‍💼', 'Berufstätige', '25 min täglich reichen.'),
+                  const SizedBox(height: AppSpacing.lg),
+                  _AudienceCard('👨‍👩‍👧', 'Eltern', 'Erst für dich, dann für andere.'),
+                  const SizedBox(height: AppSpacing.lg),
+                  _AudienceCard('🧓', '50+', 'Nie zu spät.'),
+                ],
+              )
+            : Row(children: [
+                Expanded(child: _AudienceCard('🧑‍💼', 'Berufstätige', '25 min täglich reichen.')),
+                const SizedBox(width: AppSpacing.lg),
+                Expanded(child: _AudienceCard('👨‍👩‍👧', 'Eltern', 'Erst für dich, dann für andere.')),
+                const SizedBox(width: AppSpacing.lg),
+                Expanded(child: _AudienceCard('🧓', '50+', 'Nie zu spät.')),
+              ]),
       ],
     );
   }
