@@ -305,54 +305,65 @@ class _ArticlePreview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(AppSpacing.xxl),
-      decoration: BoxDecoration(
-        color: AppColors.surfaceElevated,
-        borderRadius: AppRadius.xl,
-        border: Border.all(color: AppColors.hairlineDark),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          // Category tag
-          Container(
-            padding: const EdgeInsets.symmetric(
-                horizontal: AppSpacing.lg, vertical: AppSpacing.xs),
-            decoration: const BoxDecoration(
-              color: AppColors.brand,
-              borderRadius: AppRadius.full,
-            ),
-            child: Text('Gut Health & Mikrobiom',
-                style: AppTextStyles.eyebrow.copyWith(color: AppColors.onDark)),
+    // Bis es einen eigenen Fermentation-Artikel gibt, führt die Vorschau zur
+    // Blog-Übersicht. Die ganze Karte ist klickbar (Hand-Cursor auf Web).
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(
+        onTap: () => GoRouter.of(context).go('/blog'),
+        child: Container(
+          padding: const EdgeInsets.all(AppSpacing.xxl),
+          decoration: BoxDecoration(
+            color: AppColors.surfaceElevated,
+            borderRadius: AppRadius.xl,
+            border: Border.all(color: AppColors.hairlineDark),
           ),
-          const SizedBox(height: AppSpacing.lg),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Category tag
+              Container(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.lg, vertical: AppSpacing.xs),
+                decoration: const BoxDecoration(
+                  color: AppColors.brand,
+                  borderRadius: AppRadius.full,
+                ),
+                child: Text('Gut Health & Mikrobiom',
+                    style: AppTextStyles.eyebrow
+                        .copyWith(color: AppColors.onDark)),
+              ),
+              const SizedBox(height: AppSpacing.lg),
 
-          // Title
-          Text(
-            'Fermentation: Warum unser Körper diese Jahrtausende alte Technik braucht',
-            style: AppTextStyles.headingSM.copyWith(color: AppColors.onDark),
-            maxLines: 3,
-            overflow: TextOverflow.ellipsis,
+              // Title
+              Text(
+                'Fermentation: Warum unser Körper diese Jahrtausende alte Technik braucht',
+                style: AppTextStyles.headingSM.copyWith(color: AppColors.onDark),
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
+              ),
+              const SizedBox(height: AppSpacing.lg),
+
+              // Lead
+              Text(
+                'Fermentation ist wahrscheinlich so alt wie die Menschheit selbst. '
+                'Nicht weil unsere Vorfahren besonders klug waren, sondern weil '
+                'Lebensmittel nun mal vergären, wenn man sie lässt.',
+                style: AppTextStyles.bodySM
+                    .copyWith(color: AppColors.onDarkMuted),
+                maxLines: 4,
+                overflow: TextOverflow.ellipsis,
+              ),
+              const SizedBox(height: AppSpacing.xxl),
+
+              // Read more
+              Text('Weiterlesen →',
+                  style:
+                      AppTextStyles.buttonSM.copyWith(color: AppColors.brand)),
+            ],
           ),
-          const SizedBox(height: AppSpacing.lg),
-
-          // Lead
-          Text(
-            'Fermentation ist wahrscheinlich so alt wie die Menschheit selbst. '
-            'Nicht weil unsere Vorfahren besonders klug waren, sondern weil '
-            'Lebensmittel nun mal vergären, wenn man sie lässt.',
-            style: AppTextStyles.bodySM.copyWith(color: AppColors.onDarkMuted),
-            maxLines: 4,
-            overflow: TextOverflow.ellipsis,
-          ),
-          const SizedBox(height: AppSpacing.xxl),
-
-          // Read more
-          Text('Weiterlesen →',
-              style: AppTextStyles.buttonSM.copyWith(color: AppColors.brand)),
-        ],
+        ),
       ),
     );
   }
