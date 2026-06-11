@@ -19,11 +19,33 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final _scrollCtrl = ScrollController();
+  final _pillarsKey = GlobalKey();
+  final _servicesKey = GlobalKey();
+  final _youtubeKey = GlobalKey();
 
   @override
   void dispose() {
     _scrollCtrl.dispose();
     super.dispose();
+  }
+
+  void _scrollToSection(String id) {
+    final key = {
+      'training': _servicesKey,
+      'mindbody': _pillarsKey,
+      'ernaehrung': _pillarsKey,
+      'youtube': _youtubeKey,
+    }[id];
+    final ctx = key?.currentContext;
+    if (ctx == null) return;
+    final box = ctx.findRenderObject();
+    if (box is! RenderBox) return;
+    // 64px Navbar liegt über dem Inhalt — Sektion knapp darunter ausrichten.
+    final target = (box.localToGlobal(Offset.zero).dy + _scrollCtrl.offset - 64)
+        .clamp(0.0, _scrollCtrl.position.maxScrollExtent);
+    _scrollCtrl.animateTo(target,
+        duration: const Duration(milliseconds: 600),
+        curve: Curves.easeInOutCubic);
   }
 
   @override
@@ -40,16 +62,16 @@ class _HomeScreenState extends State<HomeScreen> {
                 const SizedBox(height: 64),
                 HeroSection(scrollController: _scrollCtrl),
                 TickerBanner(scrollController: _scrollCtrl),
-                const ThreePillars(),
+                ThreePillars(key: _pillarsKey),
                 AboutSection(scrollController: _scrollCtrl),
-                const ServicesSection(),
+                ServicesSection(key: _servicesKey),
                 const BlogPreviewSection(),
-                YoutubeSection(scrollController: _scrollCtrl),
+                YoutubeSection(key: _youtubeKey, scrollController: _scrollCtrl),
                 const FooterWidget(),
               ],
             ),
           ),
-          const TrhiNavBar(),
+          TrhiNavBar(onSectionTap: _scrollToSection),
         ],
       ),
     );

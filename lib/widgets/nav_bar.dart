@@ -5,7 +5,19 @@ import '../theme/app_text_styles.dart';
 import '../theme/app_theme.dart';
 
 class TrhiNavBar extends StatelessWidget {
-  const TrhiNavBar({super.key});
+  /// Sektions-Links: Home übergibt einen Scroll-Callback; ohne Callback
+  /// (Blog-Seiten) führen die Links zur Startseite.
+  final ValueChanged<String>? onSectionTap;
+
+  const TrhiNavBar({super.key, this.onSectionTap});
+
+  void _openSection(BuildContext context, String id) {
+    if (onSectionTap != null) {
+      onSectionTap!(id);
+    } else {
+      context.go('/');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,10 +65,10 @@ class TrhiNavBar extends StatelessWidget {
             const SizedBox(width: AppSpacing.md),
 
             if (!isMobile) ...[
-              _NavLink('Training'),
-              _NavLink('Mind-Body'),
-              _NavLink('Ernährung'),
-              _NavLink('YouTube'),
+              _NavLink('Training', onTap: () => _openSection(context, 'training')),
+              _NavLink('Mind-Body', onTap: () => _openSection(context, 'mindbody')),
+              _NavLink('Ernährung', onTap: () => _openSection(context, 'ernaehrung')),
+              _NavLink('YouTube', onTap: () => _openSection(context, 'youtube')),
               _NavLink('Buchen', onTap: () => context.go('/booking')),
               const SizedBox(width: AppSpacing.lg),
             ],
@@ -92,10 +104,13 @@ class _NavLink extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
-      child: GestureDetector(
-        onTap: onTap,
-        child: Text(label,
-            style: AppTextStyles.bodyMD.copyWith(color: AppColors.onDark)),
+      child: MouseRegion(
+        cursor: SystemMouseCursors.click,
+        child: GestureDetector(
+          onTap: onTap,
+          child: Text(label,
+              style: AppTextStyles.bodyMD.copyWith(color: AppColors.onDark)),
+        ),
       ),
     );
   }
