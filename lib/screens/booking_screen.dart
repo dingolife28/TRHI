@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_theme.dart';
 import '../theme/app_text_styles.dart';
@@ -15,6 +16,16 @@ class BookingScreen extends StatefulWidget {
 class _BookingScreenState extends State<BookingScreen> {
   int _selectedSession = 3;
   String? _selectedSlot;
+
+  // Alle Wege hierher nutzen context.go() — der Navigator-Stack ist dann leer
+  // und BackButton/maybePop täte nichts. Darum: pop wenn möglich, sonst Home.
+  void _goBack(BuildContext context) {
+    if (context.canPop()) {
+      context.pop();
+    } else {
+      context.go('/');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +50,10 @@ class _BookingScreenState extends State<BookingScreen> {
         appBar: AppBar(
           backgroundColor: AppColors.canvasDark,
           elevation: 0,
-          leading: BackButton(color: AppColors.onDark),
+          leading: BackButton(
+            color: AppColors.onDark,
+            onPressed: () => _goBack(context),
+          ),
           title: Text('Termin anfragen',
               style: AppTextStyles.headingSM.copyWith(color: AppColors.onDark)),
           bottom: PreferredSize(
@@ -57,18 +71,32 @@ class _BookingScreenState extends State<BookingScreen> {
     }
 
     return Scaffold(
-      body: Row(
+      body: Stack(
         children: [
-          Expanded(
-            child: Container(
-              color: AppColors.canvasDark,
-              child: SingleChildScrollView(child: left),
-            ),
+          Row(
+            children: [
+              Expanded(
+                child: Container(
+                  color: AppColors.canvasDark,
+                  child: SingleChildScrollView(child: left),
+                ),
+              ),
+              Expanded(
+                child: Container(
+                  color: AppColors.canvasLight,
+                  child: SingleChildScrollView(child: form),
+                ),
+              ),
+            ],
           ),
-          Expanded(
-            child: Container(
-              color: AppColors.canvasLight,
-              child: SingleChildScrollView(child: form),
+          Positioned(
+            top: AppSpacing.xl,
+            left: AppSpacing.xl,
+            child: IconButton(
+              onPressed: () => _goBack(context),
+              icon: const Icon(Icons.arrow_back),
+              color: AppColors.onDark,
+              tooltip: 'Zurück',
             ),
           ),
         ],

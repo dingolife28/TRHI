@@ -302,6 +302,7 @@ class _BookingFormState extends State<BookingForm> {
 
             DropdownButtonFormField<String>(
               initialValue: _activityLevel,
+              isExpanded: true,
               decoration: dec('Aktuelles Aktivitätslevel'),
               dropdownColor: isLight ? AppColors.canvasLight : AppColors.surfaceElevated,
               style: AppTextStyles.bodyMD.copyWith(color: textColor),
@@ -314,6 +315,7 @@ class _BookingFormState extends State<BookingForm> {
 
             DropdownButtonFormField<String>(
               initialValue: _source,
+              isExpanded: true,
               decoration: dec('Wie hast du TRHI gefunden?'),
               dropdownColor: isLight ? AppColors.canvasLight : AppColors.surfaceElevated,
               style: AppTextStyles.bodyMD.copyWith(color: textColor),

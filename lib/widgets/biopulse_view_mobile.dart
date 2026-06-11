@@ -26,6 +26,9 @@ class _BiopulseViewState extends State<BiopulseView> {
   }
 
   Future<void> _load() async {
+    // Ohne registrierte WebView-Plattform (z. B. in Widget-Tests) beim
+    // schlichten Farbhintergrund bleiben statt zu crashen.
+    if (WebViewPlatform.instance == null) return;
     // Die Biopulse-Seite ist bereits text- und UI-frei (reiner Hintergrund),
     // daher kein bg-Modus-Eingriff nötig — direkt laden.
     final markup = await rootBundle.loadString(_assetKey);

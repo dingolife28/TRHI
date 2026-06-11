@@ -62,12 +62,16 @@ class BookingLeft extends StatelessWidget {
                 child: Row(children: [
                   Text(icon, style: const TextStyle(fontSize: 24)),
                   const SizedBox(width: AppSpacing.lg),
-                  Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    Text(title,
-                        style: AppTextStyles.headingSM.copyWith(color: AppColors.onDark)),
-                    Text(sub,
-                        style: AppTextStyles.caption.copyWith(color: AppColors.stone)),
-                  ]),
+                  // Expanded, damit lange Titel/Untertitel auf schmalen
+                  // Screens umbrechen statt rechts zu überlaufen.
+                  Expanded(
+                    child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                      Text(title,
+                          style: AppTextStyles.headingSM.copyWith(color: AppColors.onDark)),
+                      Text(sub,
+                          style: AppTextStyles.caption.copyWith(color: AppColors.stone)),
+                    ]),
+                  ),
                 ]),
               ),
             );

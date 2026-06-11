@@ -26,6 +26,9 @@ class _CellularResonanceViewState extends State<CellularResonanceView> {
   }
 
   Future<void> _load() async {
+    // Ohne registrierte WebView-Plattform (z. B. in Widget-Tests) beim
+    // schlichten Farbhintergrund bleiben statt zu crashen.
+    if (WebViewPlatform.instance == null) return;
     final raw = await rootBundle.loadString(_assetKey);
     // bg-Modus erzwingen: loadHtmlString kennt keine URL-Query (?bg=1), also
     // setzen wir die Klasse direkt aufs <html>-Tag. So bleibt die Asset-Datei
