@@ -13,7 +13,7 @@ class TrhiCopy {
 
   static const heroSubline  = 'Für Berufstätige · Eltern · 50+ · Alle die noch leben';
   static const ctaPrimary   = 'Erstgespräch buchen';
-  static const ctaSecondary = 'Was kann ich noch?';
+  static const ctaSecondary = 'TRHI Blog';
 
   static const aboutTitle = 'Keine Diät.\nKein Programm.\nEin Aufruf.';
 

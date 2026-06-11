@@ -430,7 +430,7 @@ class _BodyDesktop extends StatelessWidget {
                     child: const Text(TrhiCopy.ctaPrimary),
                   ),
                   OutlinedButton(
-                    onPressed: () {},
+                    onPressed: () => GoRouter.of(context).go('/blog'),
                     style: OutlinedButton.styleFrom(
                       foregroundColor: AppColors.onDark,
                       side: const BorderSide(color: AppColors.hairlineDark),
@@ -466,17 +466,35 @@ class _BodyMobile extends StatelessWidget {
             style: AppTextStyles.eyebrow.copyWith(
                 color: AppColors.stone, letterSpacing: 1.2)),
         const SizedBox(height: AppSpacing.xxl),
-        FilledButton(
-          onPressed: () => GoRouter.of(context).go('/booking'),
-          style: FilledButton.styleFrom(
-            backgroundColor: AppColors.canvasLight,
-            foregroundColor: AppColors.canvasDark,
-            padding: const EdgeInsets.symmetric(
-                horizontal: AppSpacing.xxl, vertical: AppSpacing.md),
-            shape: const StadiumBorder(),
-            textStyle: AppTextStyles.buttonLG,
-          ),
-          child: const Text(TrhiCopy.ctaPrimary),
+        Wrap(
+          spacing: AppSpacing.lg,
+          runSpacing: AppSpacing.lg,
+          children: [
+            FilledButton(
+              onPressed: () => GoRouter.of(context).go('/booking'),
+              style: FilledButton.styleFrom(
+                backgroundColor: AppColors.canvasLight,
+                foregroundColor: AppColors.canvasDark,
+                padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.xxl, vertical: AppSpacing.md),
+                shape: const StadiumBorder(),
+                textStyle: AppTextStyles.buttonLG,
+              ),
+              child: const Text(TrhiCopy.ctaPrimary),
+            ),
+            OutlinedButton(
+              onPressed: () => GoRouter.of(context).go('/blog'),
+              style: OutlinedButton.styleFrom(
+                foregroundColor: AppColors.onDark,
+                side: const BorderSide(color: AppColors.hairlineDark),
+                padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.xxl, vertical: AppSpacing.md),
+                shape: const StadiumBorder(),
+                textStyle: AppTextStyles.buttonLG,
+              ),
+              child: const Text(TrhiCopy.ctaSecondary),
+            ),
+          ],
         ),
       ],
     );
