@@ -2,13 +2,7 @@ import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_text_styles.dart';
 import '../theme/app_theme.dart';
-
-const _sessionTypes = [
-  ('🎯', '1:1 Personal Training', '60 min · Bewegungsanalyse & Plan'),
-  ('📋', 'Health Consulting',     '45 min · Ganzheitliche Beratung'),
-  ('🧘', 'Mind-Body Session',     '45 min · Atemarbeit & Mindset'),
-  ('✨', 'Erstgespräch',          '30 min · Kostenlos'),
-];
+import '../i18n/language_scope.dart';
 
 const _slots = ['08:00', '09:00', '10:00', '11:00', '14:00', '15:00', '16:00', '17:00'];
 const _unavailable = {'09:00', '11:00', '16:00'};
@@ -29,20 +23,27 @@ class BookingLeft extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = context.t;
     final isMobile = MediaQuery.of(context).size.width < Breakpoints.tablet;
+    final sessions = <(String, String, String)>[
+      ('🎯', t.session1Title, t.session1Desc),
+      ('📋', t.session2Title, t.session2Desc),
+      ('🧘', t.session3Title, t.session3Desc),
+      ('✨', t.session4Title, t.session4Desc),
+    ];
     return Padding(
       padding: EdgeInsets.all(isMobile ? AppSpacing.xl : AppSpacing.band),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Was bringt dich hierher?',
+          Text(t.bookingLeadHeading,
               style: AppTextStyles.headingLG.copyWith(color: AppColors.onDark)),
           const SizedBox(height: AppSpacing.sm),
-          Text('Erstgespräch immer kostenlos.',
+          Text(t.bookingFreeHint,
               style: AppTextStyles.bodyMD.copyWith(color: AppColors.onDarkMuted)),
           const SizedBox(height: AppSpacing.xxxl),
 
-          ..._sessionTypes.asMap().entries.map((e) {
+          ...sessions.asMap().entries.map((e) {
             final i = e.key;
             final (icon, title, sub) = e.value;
             final selected = selectedSession == i;
@@ -78,7 +79,7 @@ class BookingLeft extends StatelessWidget {
           }),
 
           const SizedBox(height: AppSpacing.xxl),
-          Text('Uhrzeit wählen',
+          Text(t.bookingTimeHeading,
               style: AppTextStyles.headingSM.copyWith(color: AppColors.onDark)),
           const SizedBox(height: AppSpacing.lg),
 

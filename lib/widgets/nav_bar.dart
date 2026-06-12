@@ -3,6 +3,8 @@ import 'package:go_router/go_router.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_text_styles.dart';
 import '../theme/app_theme.dart';
+import '../i18n/language_scope.dart';
+import '../i18n/language_toggle.dart';
 
 class TrhiNavBar extends StatelessWidget {
   /// Sektions-Links: Home übergibt einen Scroll-Callback; ohne Callback
@@ -21,6 +23,7 @@ class TrhiNavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = context.t;
     final width = MediaQuery.of(context).size.width;
     final isMobile = width < Breakpoints.desktop;
     final isNarrow = width < Breakpoints.mobile;
@@ -37,6 +40,9 @@ class TrhiNavBar extends StatelessWidget {
             horizontal: isNarrow ? AppSpacing.lg : AppSpacing.xl),
         child: Row(
           children: [
+            // Sprachumschalter ganz links (oben links in der Kopfzeile).
+            const LanguageToggle(),
+            SizedBox(width: isNarrow ? AppSpacing.sm : AppSpacing.md),
             // Logo + brand name — Expanded, damit der CTA-Button rechts immer
             // seinen vollen Platz behält. Auf schmalen Screens ellipsiert der
             // Markentext, statt "Erstgespräch" abzuschneiden.
@@ -50,7 +56,7 @@ class TrhiNavBar extends StatelessWidget {
                   // Nur noch der Schriftzug — die Wortmarke "TRHI" steckt bereits
                   // im Logo. Ellipsis als Sicherheitsnetz auf schmalen Screens.
                   Flexible(
-                    child: Text('The Real Health Insurance',
+                    child: Text(t.brandTagline,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: AppTextStyles.eyebrow.copyWith(
@@ -65,11 +71,11 @@ class TrhiNavBar extends StatelessWidget {
             const SizedBox(width: AppSpacing.md),
 
             if (!isMobile) ...[
-              _NavLink('Training', onTap: () => _openSection(context, 'training')),
-              _NavLink('Mind-Body', onTap: () => _openSection(context, 'mindbody')),
-              _NavLink('Ernährung', onTap: () => _openSection(context, 'ernaehrung')),
-              _NavLink('YouTube', onTap: () => _openSection(context, 'youtube')),
-              _NavLink('Buchen', onTap: () => context.go('/booking')),
+              _NavLink(t.navTraining, onTap: () => _openSection(context, 'training')),
+              _NavLink(t.navMindBody, onTap: () => _openSection(context, 'mindbody')),
+              _NavLink(t.navNutrition, onTap: () => _openSection(context, 'ernaehrung')),
+              _NavLink(t.navYouTube, onTap: () => _openSection(context, 'youtube')),
+              _NavLink(t.navBook, onTap: () => context.go('/booking')),
               const SizedBox(width: AppSpacing.lg),
             ],
 
@@ -85,7 +91,7 @@ class TrhiNavBar extends StatelessWidget {
                 shape: const StadiumBorder(),
                 textStyle: AppTextStyles.buttonSM,
               ),
-              child: const Text('Erstgespräch'),
+              child: Text(t.navCta),
             ),
           ],
         ),

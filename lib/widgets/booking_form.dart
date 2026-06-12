@@ -3,28 +3,7 @@ import '../services/booking_service.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_text_styles.dart';
 import '../theme/app_theme.dart';
-
-const _goals = [
-  '🔥 Abnehmen', '💪 Muskelaufbau', '🦵 Mehr Beweglichkeit',
-  '🦴 Weniger Rückenschmerzen', '⚡ Mehr Energie im Alltag',
-  '🏃 Ausdauer verbessern', '🧘 Stressabbau', '🏕 Training Camp',
-  '🏅 Wettkampf-Vorbereitung', '🦺 Verletzungsrehabilitation',
-  '🧓 Fit im Alter bleiben', '🏋 Körperhaltung verbessern',
-  '😴 Besser schlafen', '🌿 Gesündere Ernährung',
-];
-
-const _activityLevels = [
-  'Kein Sport seit längerem',
-  'Leichte Bewegung (Spazieren, Yoga)',
-  '1–2× Sport pro Woche',
-  '3–4× Sport pro Woche',
-  'Tägliches Training',
-  'Leistungssport / Wettkampf',
-];
-
-const _sources = [
-  'YouTube', 'Instagram', 'Empfehlung', 'Google', 'Sticker/Flyer', 'Sonstiges',
-];
+import '../i18n/language_scope.dart';
 
 class BookingForm extends StatefulWidget {
   final String sessionType;
@@ -66,6 +45,7 @@ class _BookingFormState extends State<BookingForm> {
 
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
+    final t = context.t;
     setState(() => _loading = true);
     try {
       await BookingService.submit(
@@ -86,8 +66,8 @@ class _BookingFormState extends State<BookingForm> {
       );
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Anfrage gesendet — wir melden uns innerhalb 24h!'),
+          SnackBar(
+            content: Text(t.bookingSuccess),
             backgroundColor: AppColors.brand,
           ),
         );
@@ -98,8 +78,8 @@ class _BookingFormState extends State<BookingForm> {
     } catch (_) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Fehler beim Senden. Bitte nochmal versuchen.'),
+          SnackBar(
+            content: Text(t.bookingError),
             backgroundColor: Colors.redAccent,
           ),
         );
@@ -111,6 +91,7 @@ class _BookingFormState extends State<BookingForm> {
 
   @override
   Widget build(BuildContext context) {
+    final t = context.t;
     final isLight = MediaQuery.of(context).size.width >= Breakpoints.tablet;
     final textColor  = isLight ? AppColors.ink : AppColors.onDark;
     final mutedColor = isLight ? AppColors.stone : AppColors.onDarkMuted;
@@ -143,49 +124,49 @@ class _BookingFormState extends State<BookingForm> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _SectionLabel('Persönliche Daten', textColor),
+            _SectionLabel(t.formPersonalSection, textColor),
             const SizedBox(height: AppSpacing.lg),
 
             if (isMobile) ...[
               TextFormField(
                 controller: _firstName,
-                decoration: dec('Vorname *'),
+                decoration: dec(t.formFirstName),
                 style: AppTextStyles.bodyMD.copyWith(color: textColor),
-                validator: (v) => (v == null || v.isEmpty) ? 'Pflichtfeld' : null,
+                validator: (v) => (v == null || v.isEmpty) ? t.formRequired : null,
               ),
               const SizedBox(height: AppSpacing.lg),
               TextFormField(
                 controller: _lastName,
-                decoration: dec('Nachname *'),
+                decoration: dec(t.formLastName),
                 style: AppTextStyles.bodyMD.copyWith(color: textColor),
-                validator: (v) => (v == null || v.isEmpty) ? 'Pflichtfeld' : null,
+                validator: (v) => (v == null || v.isEmpty) ? t.formRequired : null,
               ),
             ] else
               Row(children: [
                 Expanded(child: TextFormField(
                   controller: _firstName,
-                  decoration: dec('Vorname *'),
+                  decoration: dec(t.formFirstName),
                   style: AppTextStyles.bodyMD.copyWith(color: textColor),
-                  validator: (v) => (v == null || v.isEmpty) ? 'Pflichtfeld' : null,
+                  validator: (v) => (v == null || v.isEmpty) ? t.formRequired : null,
                 )),
                 const SizedBox(width: AppSpacing.lg),
                 Expanded(child: TextFormField(
                   controller: _lastName,
-                  decoration: dec('Nachname *'),
+                  decoration: dec(t.formLastName),
                   style: AppTextStyles.bodyMD.copyWith(color: textColor),
-                  validator: (v) => (v == null || v.isEmpty) ? 'Pflichtfeld' : null,
+                  validator: (v) => (v == null || v.isEmpty) ? t.formRequired : null,
                 )),
               ]),
             const SizedBox(height: AppSpacing.lg),
 
             TextFormField(
               controller: _email,
-              decoration: dec('E-Mail *'),
+              decoration: dec(t.formEmail),
               keyboardType: TextInputType.emailAddress,
               style: AppTextStyles.bodyMD.copyWith(color: textColor),
               validator: (v) {
-                if (v == null || v.isEmpty) return 'Pflichtfeld';
-                if (!v.contains('@')) return 'Ungültige E-Mail';
+                if (v == null || v.isEmpty) return t.formRequired;
+                if (!v.contains('@')) return t.formInvalidEmail;
                 return null;
               },
             ),
@@ -193,21 +174,21 @@ class _BookingFormState extends State<BookingForm> {
 
             TextFormField(
               controller: _phone,
-              decoration: dec('Telefon (optional)'),
+              decoration: dec(t.formPhone),
               keyboardType: TextInputType.phone,
               style: AppTextStyles.bodyMD.copyWith(color: textColor),
             ),
             const SizedBox(height: AppSpacing.xxxl),
 
-            _SectionLabel('Was möchtest du erreichen?', textColor),
-            Text('Mehrere Ziele möglich.',
+            _SectionLabel(t.formGoalsSection, textColor),
+            Text(t.formGoalsHint,
                 style: AppTextStyles.caption.copyWith(color: mutedColor)),
             const SizedBox(height: AppSpacing.lg),
 
             Wrap(
               spacing: AppSpacing.sm,
               runSpacing: AppSpacing.sm,
-              children: _goals.map((g) {
+              children: t.goals.map((g) {
                 final sel = _selectedGoals.contains(g);
                 return GestureDetector(
                   onTap: () => setState(() =>
@@ -232,18 +213,18 @@ class _BookingFormState extends State<BookingForm> {
 
             TextFormField(
               controller: _customGoal,
-              decoration: dec('Eigenes Ziel (optional)'),
+              decoration: dec(t.formCustomGoal),
               style: AppTextStyles.bodyMD.copyWith(color: textColor),
             ),
             const SizedBox(height: AppSpacing.xxxl),
 
-            _SectionLabel('Körperdaten', textColor),
+            _SectionLabel(t.formBodySection, textColor),
             const SizedBox(height: AppSpacing.lg),
 
             if (isMobile) ...[
               TextFormField(
                 controller: _age,
-                decoration: dec('Alter', hint: 'z.B. 34'),
+                decoration: dec(t.formAge, hint: t.formAgeHint),
                 keyboardType: TextInputType.number,
                 style: AppTextStyles.bodyMD.copyWith(color: textColor),
               ),
@@ -251,14 +232,14 @@ class _BookingFormState extends State<BookingForm> {
               Row(children: [
                 Expanded(child: TextFormField(
                   controller: _height,
-                  decoration: dec('Größe (cm)', hint: 'z.B. 178'),
+                  decoration: dec(t.formHeight, hint: t.formHeightHint),
                   keyboardType: TextInputType.number,
                   style: AppTextStyles.bodyMD.copyWith(color: textColor),
                 )),
                 const SizedBox(width: AppSpacing.lg),
                 Expanded(child: TextFormField(
                   controller: _weight,
-                  decoration: dec('Gewicht (kg)', hint: 'z.B. 75'),
+                  decoration: dec(t.formWeight, hint: t.formWeightHint),
                   keyboardType: TextInputType.number,
                   style: AppTextStyles.bodyMD.copyWith(color: textColor),
                 )),
@@ -267,21 +248,21 @@ class _BookingFormState extends State<BookingForm> {
               Row(children: [
                 Expanded(child: TextFormField(
                   controller: _age,
-                  decoration: dec('Alter', hint: 'z.B. 34'),
+                  decoration: dec(t.formAge, hint: t.formAgeHint),
                   keyboardType: TextInputType.number,
                   style: AppTextStyles.bodyMD.copyWith(color: textColor),
                 )),
                 const SizedBox(width: AppSpacing.lg),
                 Expanded(child: TextFormField(
                   controller: _height,
-                  decoration: dec('Größe (cm)', hint: 'z.B. 178'),
+                  decoration: dec(t.formHeight, hint: t.formHeightHint),
                   keyboardType: TextInputType.number,
                   style: AppTextStyles.bodyMD.copyWith(color: textColor),
                 )),
                 const SizedBox(width: AppSpacing.lg),
                 Expanded(child: TextFormField(
                   controller: _weight,
-                  decoration: dec('Gewicht (kg)', hint: 'z.B. 75'),
+                  decoration: dec(t.formWeight, hint: t.formWeightHint),
                   keyboardType: TextInputType.number,
                   style: AppTextStyles.bodyMD.copyWith(color: textColor),
                 )),
@@ -290,23 +271,22 @@ class _BookingFormState extends State<BookingForm> {
 
             TextFormField(
               controller: _injuries,
-              decoration: dec('Verletzungen / Beschwerden (optional)',
-                  hint: 'z.B. Knieschmerzen links, Bandscheibe L4/L5…'),
+              decoration: dec(t.formInjuries, hint: t.formInjuriesHint),
               maxLines: 3,
               style: AppTextStyles.bodyMD.copyWith(color: textColor),
             ),
             const SizedBox(height: AppSpacing.xxxl),
 
-            _SectionLabel('Aktivitätslevel', textColor),
+            _SectionLabel(t.formActivitySection, textColor),
             const SizedBox(height: AppSpacing.lg),
 
             DropdownButtonFormField<String>(
               initialValue: _activityLevel,
               isExpanded: true,
-              decoration: dec('Aktuelles Aktivitätslevel'),
+              decoration: dec(t.formCurrentActivity),
               dropdownColor: isLight ? AppColors.canvasLight : AppColors.surfaceElevated,
               style: AppTextStyles.bodyMD.copyWith(color: textColor),
-              items: _activityLevels
+              items: t.activityLevels
                   .map((l) => DropdownMenuItem(value: l, child: Text(l)))
                   .toList(),
               onChanged: (v) => setState(() => _activityLevel = v),
@@ -316,10 +296,10 @@ class _BookingFormState extends State<BookingForm> {
             DropdownButtonFormField<String>(
               initialValue: _source,
               isExpanded: true,
-              decoration: dec('Wie hast du TRHI gefunden?'),
+              decoration: dec(t.formHowFound),
               dropdownColor: isLight ? AppColors.canvasLight : AppColors.surfaceElevated,
               style: AppTextStyles.bodyMD.copyWith(color: textColor),
-              items: _sources
+              items: t.sources
                   .map((s) => DropdownMenuItem(value: s, child: Text(s)))
                   .toList(),
               onChanged: (v) => setState(() => _source = v),
@@ -343,9 +323,7 @@ class _BookingFormState extends State<BookingForm> {
                     child: Padding(
                       padding: const EdgeInsets.only(top: 12),
                       child: Text(
-                        'Ich stimme zu, dass meine Angaben zur Bearbeitung '
-                        'meiner Anfrage gespeichert werden. '
-                        'Details in der Datenschutzerklärung.',
+                        t.formPrivacyConsent,
                         style: AppTextStyles.caption.copyWith(color: mutedColor),
                       ),
                     ),
@@ -371,13 +349,13 @@ class _BookingFormState extends State<BookingForm> {
                     ? const SizedBox(width: 20, height: 20,
                         child: CircularProgressIndicator(strokeWidth: 2,
                             color: AppColors.onDark))
-                    : const Text('Termin anfragen →'),
+                    : Text(t.formSubmit),
 
               ),
             ),
             const SizedBox(height: AppSpacing.lg),
 
-            Text('✓ Antwort innerhalb 24h · Kein Spam · Kein Verkaufsdruck',
+            Text(t.formTrust,
                 style: AppTextStyles.caption.copyWith(color: mutedColor),
                 textAlign: TextAlign.center),
           ],

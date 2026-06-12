@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_text_styles.dart';
 import '../theme/app_theme.dart';
-import '../theme/copy.dart';
+import '../i18n/language_scope.dart';
 import 'mandala_layer.dart';
 import 'biopulse_background.dart';
 
@@ -103,19 +103,20 @@ class _LeftState extends State<_Left> {
 
   @override
   Widget build(BuildContext context) {
+    final t = context.t;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Über TRHI',
+        Text(t.aboutEyebrow,
             style: AppTextStyles.eyebrow.copyWith(
                 color: AppColors.brand, letterSpacing: 1.5)),
         const SizedBox(height: AppSpacing.lg),
 
-        Text(TrhiCopy.aboutTitle,
+        Text(t.aboutTitle,
             style: AppTextStyles.displayLG.copyWith(color: AppColors.onDark)),
         const SizedBox(height: AppSpacing.xxl),
 
-        Text(TrhiCopy.aboutBody,
+        Text(t.aboutBody,
             style: AppTextStyles.bodyLG.copyWith(color: AppColors.onDarkMuted)),
         const SizedBox(height: AppSpacing.xxl),
 
@@ -124,7 +125,7 @@ class _LeftState extends State<_Left> {
           decoration: const BoxDecoration(
             border: Border(left: BorderSide(color: AppColors.brand, width: 3)),
           ),
-          child: Text(TrhiCopy.aboutQuote,
+          child: Text(t.aboutQuote,
               style: AppTextStyles.bodyLG.copyWith(
                   color: AppColors.onDark, fontStyle: FontStyle.italic)),
         ),
@@ -134,7 +135,7 @@ class _LeftState extends State<_Left> {
         GestureDetector(
           onTap: () => setState(() => _open = !_open),
           child: Row(children: [
-            Text('Rechtlicher Hinweis',
+            Text(t.aboutDisclaimerToggle,
                 style: AppTextStyles.bodySM.copyWith(color: AppColors.stone)),
             const SizedBox(width: AppSpacing.sm),
             Icon(_open ? Icons.expand_less : Icons.expand_more,
@@ -143,7 +144,7 @@ class _LeftState extends State<_Left> {
         ),
         if (_open) ...[
           const SizedBox(height: AppSpacing.lg),
-          Text(TrhiCopy.disclaimer,
+          Text(t.disclaimer,
               style: AppTextStyles.caption.copyWith(color: AppColors.stone)),
         ],
       ],
@@ -154,9 +155,16 @@ class _LeftState extends State<_Left> {
 class _Right extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final t = context.t;
     // Schmaler als 600px: drei Karten nebeneinander werden zu eng (der Titel
     // "Berufstätige" läuft sonst über) → vertikal stapeln.
     final isNarrow = MediaQuery.of(context).size.width < Breakpoints.mobile;
+
+    final cards = [
+      _AudienceCard('🧑‍💼', t.audienceProfessionals, t.audienceProfessionalsBody),
+      _AudienceCard('👨‍👩‍👧', t.audienceParents, t.audienceParentsBody),
+      _AudienceCard('🧓', t.audienceSeniors, t.audienceSeniorsBody),
+    ];
 
     return Column(
       children: [
@@ -175,12 +183,12 @@ class _Right extends StatelessWidget {
                     style: AppTextStyles.headingMD.copyWith(
                         color: AppColors.brand)),
                 const SizedBox(width: AppSpacing.sm),
-                Text('The Real Health Insurance',
+                Text(t.brandTagline,
                     style: AppTextStyles.label.copyWith(
                         color: AppColors.onDarkMuted)),
               ]),
               const SizedBox(height: AppSpacing.xl),
-              Text(TrhiCopy.trhiMotto,
+              Text(t.trhiMotto,
                   style: AppTextStyles.bodyLG.copyWith(
                       color: AppColors.onDark, fontStyle: FontStyle.italic)),
             ],
@@ -193,19 +201,19 @@ class _Right extends StatelessWidget {
             ? Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  _AudienceCard('🧑‍💼', 'Berufstätige', '25 min täglich reichen.'),
+                  cards[0],
                   const SizedBox(height: AppSpacing.lg),
-                  _AudienceCard('👨‍👩‍👧', 'Eltern', 'Erst für dich, dann für andere.'),
+                  cards[1],
                   const SizedBox(height: AppSpacing.lg),
-                  _AudienceCard('🧓', '50+', 'Nie zu spät.'),
+                  cards[2],
                 ],
               )
             : Row(children: [
-                Expanded(child: _AudienceCard('🧑‍💼', 'Berufstätige', '25 min täglich reichen.')),
+                Expanded(child: cards[0]),
                 const SizedBox(width: AppSpacing.lg),
-                Expanded(child: _AudienceCard('👨‍👩‍👧', 'Eltern', 'Erst für dich, dann für andere.')),
+                Expanded(child: cards[1]),
                 const SizedBox(width: AppSpacing.lg),
-                Expanded(child: _AudienceCard('🧓', '50+', 'Nie zu spät.')),
+                Expanded(child: cards[2]),
               ]),
       ],
     );

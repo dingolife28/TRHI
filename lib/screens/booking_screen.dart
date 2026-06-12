@@ -3,6 +3,8 @@ import 'package:go_router/go_router.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_theme.dart';
 import '../theme/app_text_styles.dart';
+import '../i18n/app_text.dart';
+import '../i18n/language_scope.dart';
 import '../widgets/booking_left.dart';
 import '../widgets/booking_form.dart';
 
@@ -29,6 +31,7 @@ class _BookingScreenState extends State<BookingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final t = context.t;
     final width = MediaQuery.of(context).size.width;
     final isMobile = width < Breakpoints.tablet;
 
@@ -40,7 +43,7 @@ class _BookingScreenState extends State<BookingScreen> {
     );
 
     final form = BookingForm(
-      sessionType: _sessionLabel(_selectedSession),
+      sessionType: _sessionLabel(t, _selectedSession),
       timeSlot: _selectedSlot,
     );
 
@@ -54,7 +57,7 @@ class _BookingScreenState extends State<BookingScreen> {
             color: AppColors.onDark,
             onPressed: () => _goBack(context),
           ),
-          title: Text('Termin anfragen',
+          title: Text(t.bookingScreenTitle,
               style: AppTextStyles.headingSM.copyWith(color: AppColors.onDark)),
           bottom: PreferredSize(
             preferredSize: const Size.fromHeight(1),
@@ -96,7 +99,7 @@ class _BookingScreenState extends State<BookingScreen> {
               onPressed: () => _goBack(context),
               icon: const Icon(Icons.arrow_back),
               color: AppColors.onDark,
-              tooltip: 'Zurück',
+              tooltip: t.back,
             ),
           ),
         ],
@@ -104,10 +107,10 @@ class _BookingScreenState extends State<BookingScreen> {
     );
   }
 
-  String _sessionLabel(int i) => const [
-    '1:1 Personal Training',
-    'Health Consulting',
-    'Mind-Body Session',
-    'Erstgespräch',
+  String _sessionLabel(AppText t, int i) => [
+    t.session1Title,
+    t.session2Title,
+    t.session3Title,
+    t.session4Title,
   ][i];
 }

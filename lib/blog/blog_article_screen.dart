@@ -7,6 +7,8 @@ import '../theme/app_theme.dart';
 import '../widgets/nav_bar.dart';
 import '../widgets/footer_widget.dart';
 import '../widgets/mandala_layer.dart';
+import '../i18n/app_lang.dart';
+import '../i18n/language_scope.dart';
 import 'blog_data.dart';
 import 'blog_card.dart';
 
@@ -19,6 +21,9 @@ class BlogArticleScreen extends StatelessWidget {
     final post = getPostBySlug(slug);
     if (post == null) return _NotFound();
 
+    final lang = context.lang;
+    final t = context.t;
+
     final related = blogPosts
         .where((p) => p.slug != slug)
         .take(3)
@@ -26,7 +31,7 @@ class BlogArticleScreen extends StatelessWidget {
 
     final width = MediaQuery.of(context).size.width;
     final isMobile = width < Breakpoints.mobile;
-    final dateStr = DateFormat('d. MMMM yyyy', 'de').format(post.publishedAt);
+    final dateStr = DateFormat('d. MMMM yyyy', lang.code).format(post.publishedAt);
 
     return Scaffold(
       backgroundColor: AppColors.canvasDark,
@@ -72,7 +77,7 @@ class BlogArticleScreen extends StatelessWidget {
                                   color: AppColors.brand,
                                   borderRadius: AppRadius.full,
                                 ),
-                                child: Text(post.category,
+                                child: Text(t.category(post.categoryKey),
                                     style: AppTextStyles.eyebrow.copyWith(
                                         color: AppColors.onDark)),
                               ),
@@ -82,11 +87,11 @@ class BlogArticleScreen extends StatelessWidget {
                                       color: AppColors.stone)),
                             ]),
                             const SizedBox(height: AppSpacing.xl),
-                            Text(post.title,
+                            Text(post.titleOf(lang),
                                 style: AppTextStyles.displayXL.copyWith(
                                     color: AppColors.onDark)),
                             const SizedBox(height: AppSpacing.lg),
-                            Text('TRHI · ${post.readingTimeMin} min Lesezeit',
+                            Text(t.readingTimeMeta(post.readingTimeMin),
                                 style: AppTextStyles.caption.copyWith(
                                     color: AppColors.stone)),
                           ],
@@ -107,7 +112,7 @@ class BlogArticleScreen extends StatelessWidget {
                   child: Center(
                     child: ConstrainedBox(
                       constraints: const BoxConstraints(maxWidth: 680),
-                      child: _ArticleBody(post: post),
+                      child: _ArticleBody(content: post.contentOf(lang)),
                     ),
                   ),
                 ),
@@ -123,7 +128,7 @@ class BlogArticleScreen extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Weitere Artikel',
+                        Text(t.blogRelatedHeading,
                             style: AppTextStyles.headingMD.copyWith(
                                 color: AppColors.ink)),
                         const SizedBox(height: AppSpacing.xl),
@@ -166,12 +171,12 @@ class BlogArticleScreen extends StatelessWidget {
                   ),
                   child: Column(
                     children: [
-                      Text('Bereit loszulegen?',
+                      Text(t.blogCtaHeading,
                           style: AppTextStyles.displayLG.copyWith(
                               color: AppColors.onDark),
                           textAlign: TextAlign.center),
                       const SizedBox(height: AppSpacing.lg),
-                      Text('Erstgespräch kostenlos. Kein Druck. Kein Verkauf.',
+                      Text(t.blogCtaSub,
                           style: AppTextStyles.bodyLG.copyWith(
                               color: AppColors.onDarkMuted),
                           textAlign: TextAlign.center),
@@ -187,7 +192,7 @@ class BlogArticleScreen extends StatelessWidget {
                           shape: const StadiumBorder(),
                           textStyle: AppTextStyles.buttonLG,
                         ),
-                        child: const Text('Erstgespräch buchen'),
+                        child: Text(t.blogCtaButton),
                       ),
                     ],
                   ),
@@ -205,12 +210,12 @@ class BlogArticleScreen extends StatelessWidget {
 }
 
 class _ArticleBody extends StatelessWidget {
-  final BlogPost post;
-  const _ArticleBody({required this.post});
+  final String content;
+  const _ArticleBody({required this.content});
 
   @override
   Widget build(BuildContext context) {
-    final paragraphs = post.content.split('\n\n');
+    final paragraphs = content.split('\n\n');
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -258,13 +263,14 @@ class _ArticleBody extends StatelessWidget {
 class _NotFound extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final t = context.t;
     return Scaffold(
       backgroundColor: AppColors.canvasDark,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text('Artikel nicht gefunden.',
+            Text(t.blogNotFound,
                 style: AppTextStyles.headingLG.copyWith(
                     color: AppColors.onDark)),
             const SizedBox(height: AppSpacing.xl),
@@ -274,7 +280,7 @@ class _NotFound extends StatelessWidget {
                 backgroundColor: AppColors.brand,
                 shape: const StadiumBorder(),
               ),
-              child: Text('Zurück zum Journal',
+              child: Text(t.blogBackToJournal,
                   style: AppTextStyles.buttonLG.copyWith(
                       color: AppColors.onDark)),
             ),

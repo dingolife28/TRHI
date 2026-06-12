@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_text_styles.dart';
 import '../theme/app_theme.dart';
-import '../theme/copy.dart';
+import '../i18n/language_scope.dart';
 import 'mandala_layer.dart';
 
 class TickerBanner extends StatefulWidget {
@@ -34,7 +34,7 @@ class _TickerBannerState extends State<TickerBanner>
 
   @override
   Widget build(BuildContext context) {
-    final items = TrhiCopy.tickerItems;
+    final items = context.t.tickerItems;
     final full = items.map((e) => '$e  ◈  ').join();
 
     return Container(

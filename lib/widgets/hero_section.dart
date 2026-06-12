@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_text_styles.dart';
 import '../theme/app_theme.dart';
-import '../theme/copy.dart';
+import '../i18n/language_scope.dart';
 import 'mandala_layer.dart';
 import 'sticker_card.dart';
 import 'cellular_resonance_background.dart';
@@ -72,6 +72,7 @@ class _HeroSectionState extends State<HeroSection>
 
   @override
   Widget build(BuildContext context) {
+    final t = context.t;
     final size = MediaQuery.of(context).size;
     final isMobile = size.width < Breakpoints.tablet;
     final isDesktop = size.width >= Breakpoints.desktop;
@@ -179,7 +180,7 @@ class _HeroSectionState extends State<HeroSection>
                               ),
                             ),
                             const SizedBox(width: AppSpacing.sm),
-                            Text('Personal Training & Consulting',
+                            Text(t.heroEyebrow,
                                 style: AppTextStyles.eyebrow.copyWith(
                                     color: AppColors.stone)),
                           ]),
@@ -187,7 +188,7 @@ class _HeroSectionState extends State<HeroSection>
                         if (!isMobile)
                           _reveal(
                             0,
-                            Text('TRHI · 2025 · Wien',
+                            Text(t.heroMeta,
                                 style: AppTextStyles.eyebrow.copyWith(
                                     color: AppColors.stone)),
                           ),
@@ -201,11 +202,13 @@ class _HeroSectionState extends State<HeroSection>
                     ? _MobileHeadline(
                         headlineStyle: headlineStyle,
                         reveal: _reveal,
+                        lines: t.heroHeadlineLines,
                       )
                     : _DesktopHeadline(
                         headlineStyle: headlineStyle,
                         reveal: _reveal,
                         screenHeight: size.height,
+                        lines: t.heroHeadlineLines,
                       ),
 
                 // ── Hairline divider ─────────────────────────────────────
@@ -245,11 +248,13 @@ class _DesktopHeadline extends StatelessWidget {
   final TextStyle headlineStyle;
   final Widget Function(int, Widget) reveal;
   final double screenHeight;
+  final List<String> lines;
 
   const _DesktopHeadline({
     required this.headlineStyle,
     required this.reveal,
     required this.screenHeight,
+    required this.lines,
   });
 
   @override
@@ -272,12 +277,14 @@ class _DesktopHeadline extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  reveal(1, Text('Dein', style: headlineStyle)),
-                  reveal(2, Text('Körper', style: headlineStyle)),
-                  reveal(3, Text('erinnert', style: headlineStyle)),
-                  reveal(4, Text('sich.', style: headlineStyle.copyWith(
-                    color: AppColors.brand,
-                  ))),
+                  for (var i = 0; i < lines.length; i++)
+                    reveal(
+                      (i + 1).clamp(1, 4),
+                      Text(lines[i],
+                          style: i == lines.length - 1
+                              ? headlineStyle.copyWith(color: AppColors.brand)
+                              : headlineStyle),
+                    ),
                 ],
               ),
             ),
@@ -305,6 +312,7 @@ class _ArticlePreview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = context.t;
     // Bis es einen eigenen Fermentation-Artikel gibt, führt die Vorschau zur
     // Blog-Übersicht. Die ganze Karte ist klickbar (Hand-Cursor auf Web).
     return MouseRegion(
@@ -330,7 +338,7 @@ class _ArticlePreview extends StatelessWidget {
                   color: AppColors.brand,
                   borderRadius: AppRadius.full,
                 ),
-                child: Text('Gut Health & Mikrobiom',
+                child: Text(t.fermentTag,
                     style: AppTextStyles.eyebrow
                         .copyWith(color: AppColors.onDark)),
               ),
@@ -338,7 +346,7 @@ class _ArticlePreview extends StatelessWidget {
 
               // Title
               Text(
-                'Fermentation: Warum unser Körper diese Jahrtausende alte Technik braucht',
+                t.fermentTitle,
                 style: AppTextStyles.headingSM.copyWith(color: AppColors.onDark),
                 maxLines: 3,
                 overflow: TextOverflow.ellipsis,
@@ -347,9 +355,7 @@ class _ArticlePreview extends StatelessWidget {
 
               // Lead
               Text(
-                'Fermentation ist wahrscheinlich so alt wie die Menschheit selbst. '
-                'Nicht weil unsere Vorfahren besonders klug waren, sondern weil '
-                'Lebensmittel nun mal vergären, wenn man sie lässt.',
+                t.fermentParas[0],
                 style: AppTextStyles.bodySM
                     .copyWith(color: AppColors.onDarkMuted),
                 maxLines: 4,
@@ -358,7 +364,7 @@ class _ArticlePreview extends StatelessWidget {
               const SizedBox(height: AppSpacing.xxl),
 
               // Read more
-              Text('Weiterlesen →',
+              Text(t.linkReadMore,
                   style:
                       AppTextStyles.buttonSM.copyWith(color: AppColors.brand)),
             ],
@@ -374,10 +380,12 @@ class _ArticlePreview extends StatelessWidget {
 class _MobileHeadline extends StatelessWidget {
   final TextStyle headlineStyle;
   final Widget Function(int, Widget) reveal;
+  final List<String> lines;
 
   const _MobileHeadline({
     required this.headlineStyle,
     required this.reveal,
+    required this.lines,
   });
 
   @override
@@ -386,12 +394,14 @@ class _MobileHeadline extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SizedBox(height: AppSpacing.xl),
-        reveal(1, Text('Dein', style: headlineStyle)),
-        reveal(2, Text('Körper', style: headlineStyle)),
-        reveal(3, Text('erinnert', style: headlineStyle)),
-        reveal(4, Text('sich.', style: headlineStyle.copyWith(
-          color: AppColors.brand,
-        ))),
+        for (var i = 0; i < lines.length; i++)
+          reveal(
+            (i + 1).clamp(1, 4),
+            Text(lines[i],
+                style: i == lines.length - 1
+                    ? headlineStyle.copyWith(color: AppColors.brand)
+                    : headlineStyle),
+          ),
         const SizedBox(height: AppSpacing.xxl),
         reveal(4, const StickerCard()),
       ],
@@ -404,12 +414,13 @@ class _MobileHeadline extends StatelessWidget {
 class _BodyDesktop extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final t = context.t;
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Expanded(
           flex: 5,
-          child: Text(TrhiCopy.heroBody,
+          child: Text(t.heroBody,
               style: AppTextStyles.bodyLG.copyWith(
                   color: AppColors.onDarkMuted)),
         ),
@@ -419,7 +430,7 @@ class _BodyDesktop extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(TrhiCopy.heroSubline,
+              Text(t.heroSubline,
                   style: AppTextStyles.eyebrow.copyWith(
                       color: AppColors.stone, letterSpacing: 1.2)),
               const SizedBox(height: AppSpacing.xxl),
@@ -438,7 +449,7 @@ class _BodyDesktop extends StatelessWidget {
                       shape: const StadiumBorder(),
                       textStyle: AppTextStyles.buttonLG,
                     ),
-                    child: const Text(TrhiCopy.ctaPrimary),
+                    child: Text(t.ctaPrimary),
                   ),
                   OutlinedButton(
                     onPressed: () => GoRouter.of(context).go('/blog'),
@@ -451,7 +462,7 @@ class _BodyDesktop extends StatelessWidget {
                       shape: const StadiumBorder(),
                       textStyle: AppTextStyles.buttonLG,
                     ),
-                    child: const Text(TrhiCopy.ctaSecondary),
+                    child: Text(t.ctaSecondary),
                   ),
                 ],
               ),
@@ -466,14 +477,15 @@ class _BodyDesktop extends StatelessWidget {
 class _BodyMobile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final t = context.t;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(TrhiCopy.heroBody,
+        Text(t.heroBody,
             style: AppTextStyles.bodyMD.copyWith(
                 color: AppColors.onDarkMuted)),
         const SizedBox(height: AppSpacing.xl),
-        Text(TrhiCopy.heroSubline,
+        Text(t.heroSubline,
             style: AppTextStyles.eyebrow.copyWith(
                 color: AppColors.stone, letterSpacing: 1.2)),
         const SizedBox(height: AppSpacing.xxl),
@@ -491,7 +503,7 @@ class _BodyMobile extends StatelessWidget {
                 shape: const StadiumBorder(),
                 textStyle: AppTextStyles.buttonLG,
               ),
-              child: const Text(TrhiCopy.ctaPrimary),
+              child: Text(t.ctaPrimary),
             ),
             OutlinedButton(
               onPressed: () => GoRouter.of(context).go('/blog'),
@@ -503,7 +515,7 @@ class _BodyMobile extends StatelessWidget {
                 shape: const StadiumBorder(),
                 textStyle: AppTextStyles.buttonLG,
               ),
-              child: const Text(TrhiCopy.ctaSecondary),
+              child: Text(t.ctaSecondary),
             ),
           ],
         ),

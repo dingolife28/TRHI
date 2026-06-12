@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:trhi_app/screens/booking_screen.dart';
+import 'lang_test_util.dart';
 
 // Repro für den gemeldeten Bug: Alle Wege zur Buchung nutzen context.go(),
 // der Navigator-Stack ist also leer — der Zurück-Pfeil muss trotzdem zur
@@ -29,7 +30,7 @@ void main() {
     tester.view.devicePixelRatio = 1.0;
     addTearDown(tester.view.reset);
 
-    await tester.pumpWidget(MaterialApp.router(routerConfig: buildRouter()));
+    await tester.pumpWidget(withLang(MaterialApp.router(routerConfig: buildRouter())));
     await tester.pumpAndSettle();
 
     await tester.tap(find.byType(BackButton));
@@ -44,7 +45,7 @@ void main() {
     tester.view.devicePixelRatio = 1.0;
     addTearDown(tester.view.reset);
 
-    await tester.pumpWidget(MaterialApp.router(routerConfig: buildRouter()));
+    await tester.pumpWidget(withLang(MaterialApp.router(routerConfig: buildRouter())));
     await tester.pumpAndSettle();
 
     await tester.tap(find.byIcon(Icons.arrow_back));

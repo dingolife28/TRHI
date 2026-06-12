@@ -5,6 +5,7 @@ import '../theme/app_text_styles.dart';
 import '../theme/app_theme.dart';
 import '../blog/blog_data.dart';
 import '../blog/blog_card.dart';
+import '../i18n/language_scope.dart';
 import 'mandala_layer.dart';
 
 class BlogPreviewSection extends StatelessWidget {
@@ -12,6 +13,7 @@ class BlogPreviewSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = context.t;
     final width = MediaQuery.of(context).size.width;
     final isMobile = width < Breakpoints.tablet;
     final preview = blogPosts.take(3).toList();
@@ -41,17 +43,16 @@ class BlogPreviewSection extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('TRHI Journal',
+                Text(t.journalEyebrow,
                     style: AppTextStyles.eyebrow.copyWith(
                         color: AppColors.brand, letterSpacing: 1.5)),
                 const SizedBox(height: AppSpacing.lg),
-                Text('Einmal pro Woche.\nImmer mit Grund.',
+                Text(t.journalHeading,
                     style: AppTextStyles.displayLG.copyWith(
                         color: AppColors.ink)),
                 const SizedBox(height: AppSpacing.lg),
                 Text(
-                  'Kein Newsletter-Blödsinn. Nur das, was gerade wichtig ist — '
-                  'ob Feiertag, Jahreszeit oder das, was die Wissenschaft diese Woche rausgefunden hat.',
+                  t.journalDescription,
                   style: AppTextStyles.bodyLG.copyWith(color: AppColors.stone),
                 ),
                 const SizedBox(height: AppSpacing.band),
@@ -97,7 +98,7 @@ class BlogPreviewSection extends StatelessWidget {
                       shape: const StadiumBorder(),
                       textStyle: AppTextStyles.buttonLG,
                     ),
-                    child: const Text('Alle Artikel lesen →'),
+                    child: Text(t.readAllArticles),
                   ),
                 ),
               ],

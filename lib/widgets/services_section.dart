@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_text_styles.dart';
 import '../theme/app_theme.dart';
+import '../i18n/language_scope.dart';
 import 'mandala_layer.dart';
 
 class ServicesSection extends StatelessWidget {
@@ -10,6 +11,7 @@ class ServicesSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = context.t;
     final width = MediaQuery.of(context).size.width;
     final isMobile = width < Breakpoints.tablet;
 
@@ -38,12 +40,12 @@ class ServicesSection extends StatelessWidget {
             ),
             child: Column(
               children: [
-                Text('Personal Training & Consulting',
+                Text(t.servicesHeading,
                     style: AppTextStyles.headingLG.copyWith(
                         color: AppColors.onDark),
                     textAlign: TextAlign.center),
                 const SizedBox(height: AppSpacing.sm),
-                Text('Individuell. Kein Standardprogramm.',
+                Text(t.servicesSubheading,
                     style: AppTextStyles.bodyLG.copyWith(
                         color: AppColors.onDarkMuted),
                     textAlign: TextAlign.center),
@@ -65,35 +67,38 @@ class ServicesSection extends StatelessWidget {
     );
   }
 
-  List<Widget> _cards(BuildContext context) => [
-    _ServiceCard(
-      icon: '🎯',
-      title: '1:1 Coaching',
-      body: 'Persönliches Training vor Ort oder online.',
-      price: 'Erstgespräch kostenlos',
-      cta: 'Buchen →',
-      onTap: () => context.go('/booking'),
-    ),
-    const SizedBox(width: AppSpacing.xl, height: AppSpacing.xl),
-    _ServiceCard(
-      icon: '📋',
-      title: 'Health Consulting',
-      body: 'Ganzheitliche Beratung Bewegung + Ernährung + Mental.',
-      price: 'Ab Erstgespräch',
-      cta: 'Mehr erfahren →',
-      featured: true,
-      onTap: () => context.go('/booking'),
-    ),
-    const SizedBox(width: AppSpacing.xl, height: AppSpacing.xl),
-    _ServiceCard(
-      icon: '🦵',
-      title: 'Mobility & Rehab',
-      body: 'Nach Verletzungen oder für alle die mehr können wollen.',
-      price: 'Mit Fachleuten',
-      cta: 'Beratung anfragen →',
-      onTap: () => context.go('/booking'),
-    ),
-  ];
+  List<Widget> _cards(BuildContext context) {
+    final t = context.t;
+    return [
+      _ServiceCard(
+        icon: '🎯',
+        title: '1:1 Coaching',
+        body: t.service1Body,
+        price: t.service1Price,
+        cta: t.service1Cta,
+        onTap: () => context.go('/booking'),
+      ),
+      const SizedBox(width: AppSpacing.xl, height: AppSpacing.xl),
+      _ServiceCard(
+        icon: '📋',
+        title: 'Health Consulting',
+        body: t.service2Body,
+        price: t.service2Price,
+        cta: t.service2Cta,
+        featured: true,
+        onTap: () => context.go('/booking'),
+      ),
+      const SizedBox(width: AppSpacing.xl, height: AppSpacing.xl),
+      _ServiceCard(
+        icon: '🦵',
+        title: 'Mobility & Rehab',
+        body: t.service3Body,
+        price: t.service3Price,
+        cta: t.service3Cta,
+        onTap: () => context.go('/booking'),
+      ),
+    ];
+  }
 }
 
 class _ServiceCard extends StatelessWidget {
@@ -141,7 +146,7 @@ class _ServiceCard extends StatelessWidget {
                 color: AppColors.canvasDark.withValues(alpha: 0.3),
                 borderRadius: AppRadius.full,
               ),
-              child: Text('Empfohlen',
+              child: Text(context.t.featuredBadge,
                   style: AppTextStyles.label.copyWith(color: AppColors.onDark)),
             ),
           Text(icon, style: const TextStyle(fontSize: 32)),

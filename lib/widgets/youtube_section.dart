@@ -3,6 +3,8 @@ import 'package:url_launcher/url_launcher.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_text_styles.dart';
 import '../theme/app_theme.dart';
+import '../i18n/app_text.dart';
+import '../i18n/language_scope.dart';
 import 'mandala_layer.dart';
 
 class YoutubeSection extends StatelessWidget {
@@ -11,6 +13,7 @@ class YoutubeSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = context.t;
     final width = MediaQuery.of(context).size.width;
     final isMobile = width < Breakpoints.tablet;
 
@@ -44,23 +47,23 @@ class YoutubeSection extends StatelessWidget {
             ),
             child: Column(
               children: [
-                Text('TRHI auf YouTube & mehr.',
+                Text(t.youtubeHeading,
                     style: AppTextStyles.headingLG.copyWith(
                         color: AppColors.onDark),
                     textAlign: TextAlign.center),
                 const SizedBox(height: AppSpacing.sm),
-                Text('Gutes Wissen kennt keine Grenzen.',
+                Text(t.youtubeSubtitle,
                     style: AppTextStyles.bodyLG.copyWith(
                         color: AppColors.onDarkMuted),
                     textAlign: TextAlign.center),
                 const SizedBox(height: AppSpacing.band),
 
                 if (isMobile)
-                  Column(children: _channelCards())
+                  Column(children: _channelCards(t))
                 else
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: _channelCards()
+                    children: _channelCards(t)
                         .map((c) => Expanded(child: c))
                         .toList(),
                   ),
@@ -74,8 +77,7 @@ class YoutubeSection extends StatelessWidget {
                     borderRadius: AppRadius.md,
                   ),
                   child: Text(
-                    'TRHI hat keine bezahlte Partnerschaft mit empfohlenen Kanälen. '
-                    'Bildung geht uns vor Werbung.',
+                    t.youtubeDisclaimer,
                     style: AppTextStyles.caption.copyWith(color: AppColors.stone),
                     textAlign: TextAlign.center,
                   ),
@@ -88,37 +90,35 @@ class YoutubeSection extends StatelessWidget {
     );
   }
 
-  List<Widget> _channelCards() => [
+  List<Widget> _channelCards(AppText t) => [
     _ChannelCard(
       name: 'TRHI',
       handle: '@TRHI',
-      description: 'Mobility, Ernährung, Mind-Body — für Berufstätige, Eltern, 50+',
+      description: t.channelTrhiDesc,
       url: 'https://youtube.com/@TRHI',
       badgeLabel: 'TRHI',
       badgeColor: AppColors.brand,
-      ctaLabel: 'Abonnieren',
+      ctaLabel: t.subscribeCta,
     ),
     const SizedBox(width: AppSpacing.xl, height: AppSpacing.xl),
     _ChannelCard(
       name: 'Squat University',
       handle: '@SquatUniversity',
-      description: 'Dr. Aaron Horschig — Physiotherapeut & Kraft-Coach. '
-          'Wissenschaftlich fundierte Mobility-Arbeit. Pflicht für jeden mit Gelenken.',
+      description: t.channelSquatDesc,
       url: 'https://youtube.com/@SquatUniversity',
-      badgeLabel: 'Empfohlen',
+      badgeLabel: t.featuredBadge,
       badgeColor: Colors.red,
-      ctaLabel: 'Besuchen →',
+      ctaLabel: t.visitCta,
     ),
     const SizedBox(width: AppSpacing.xl, height: AppSpacing.xl),
     _ChannelCard(
       name: 'Dr. John Campbell',
       handle: '@Campbellteaching',
-      description: 'Gesundheit, Ernährung, medizinische Forschung klar erklärt. '
-          'Für Menschen die verstehen wollen, nicht nur folgen.',
+      description: t.channelCampbellDesc,
       url: 'https://youtube.com/@Campbellteaching',
-      badgeLabel: 'Empfohlen',
+      badgeLabel: t.featuredBadge,
       badgeColor: Colors.red,
-      ctaLabel: 'Besuchen →',
+      ctaLabel: t.visitCta,
     ),
   ];
 }

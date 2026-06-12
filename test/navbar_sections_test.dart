@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:trhi_app/screens/home_screen.dart';
 import 'package:trhi_app/widgets/nav_bar.dart';
+import 'lang_test_util.dart';
 
 // Die Desktop-Navlinks (Training/Mind-Body/Ernährung/YouTube) waren vorher
 // tot — dieser Test stellt sicher, dass sie zur jeweiligen Sektion scrollen.
@@ -29,7 +30,7 @@ void main() {
     tester.view.devicePixelRatio = 1.0;
     addTearDown(tester.view.reset);
 
-    await tester.pumpWidget(const MaterialApp(home: HomeScreen()));
+    await tester.pumpWidget(withLang(const MaterialApp(home: HomeScreen())));
     // Kein pumpAndSettle: Mandala/Ticker animieren endlos.
     await tester.pump(const Duration(seconds: 2));
 

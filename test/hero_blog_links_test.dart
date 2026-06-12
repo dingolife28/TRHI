@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:trhi_app/screens/home_screen.dart';
+import 'lang_test_util.dart';
 
 // Hero-Verlinkungen zum Blog: der relabelte „TRHI Blog"-CTA und die
 // „Weiterlesen →"-Artikelvorschau müssen beide zu /blog führen.
@@ -32,7 +33,7 @@ void main() {
     };
     addTearDown(() => FlutterError.onError = origOnError);
 
-    await tester.pumpWidget(MaterialApp.router(routerConfig: buildRouter()));
+    await tester.pumpWidget(withLang(MaterialApp.router(routerConfig: buildRouter())));
     await tester.pump(const Duration(seconds: 1));
   }
 

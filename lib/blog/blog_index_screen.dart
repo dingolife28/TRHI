@@ -4,10 +4,10 @@ import '../theme/app_text_styles.dart';
 import '../theme/app_theme.dart';
 import '../widgets/nav_bar.dart';
 import '../widgets/footer_widget.dart';
+import '../i18n/app_text.dart';
+import '../i18n/language_scope.dart';
 import 'blog_data.dart';
 import 'blog_card.dart';
-
-const _categories = ['Alle', 'Fitness', 'Ernährung', 'Mind-Body', 'Wissenschaft', 'Saisonal'];
 
 class BlogIndexScreen extends StatefulWidget {
   const BlogIndexScreen({super.key});
@@ -17,11 +17,12 @@ class BlogIndexScreen extends StatefulWidget {
 }
 
 class _BlogIndexScreenState extends State<BlogIndexScreen> {
-  String _selectedCategory = 'Alle';
+  String _selectedKey = 'all';
 
   @override
   Widget build(BuildContext context) {
-    final filtered = getPostsByCategory(_selectedCategory);
+    final t = context.t;
+    final filtered = getPostsByCategory(_selectedKey);
     final width = MediaQuery.of(context).size.width;
     final isMobile = width < Breakpoints.mobile;
     final isTablet = width < Breakpoints.tablet;
@@ -47,16 +48,16 @@ class _BlogIndexScreenState extends State<BlogIndexScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('TRHI Journal',
+                      Text(t.journalEyebrow,
                           style: AppTextStyles.eyebrow.copyWith(
                               color: AppColors.brand, letterSpacing: 1.5)),
                       const SizedBox(height: AppSpacing.lg),
-                      Text('Einmal pro Woche.\nImmer mit Grund.',
+                      Text(t.journalHeading,
                           style: AppTextStyles.displayLG.copyWith(
                               color: AppColors.onDark)),
                       const SizedBox(height: AppSpacing.lg),
                       Text(
-                        'Fitness · Ernährung · Mentale Stärke — verbunden mit dem, was gerade passiert.',
+                        t.blogIndexSubheading,
                         style: AppTextStyles.bodyLG.copyWith(
                             color: AppColors.onDarkMuted),
                       ),
@@ -75,10 +76,10 @@ class _BlogIndexScreenState extends State<BlogIndexScreen> {
                   child: Wrap(
                     spacing: AppSpacing.sm,
                     runSpacing: AppSpacing.sm,
-                    children: _categories.map((cat) {
-                      final sel = _selectedCategory == cat;
+                    children: AppText.categoryKeys.map((key) {
+                      final sel = _selectedKey == key;
                       return GestureDetector(
-                        onTap: () => setState(() => _selectedCategory = cat),
+                        onTap: () => setState(() => _selectedKey = key),
                         child: Container(
                           padding: const EdgeInsets.symmetric(
                               horizontal: AppSpacing.xl,
@@ -89,7 +90,7 @@ class _BlogIndexScreenState extends State<BlogIndexScreen> {
                                 : AppColors.surfaceSoft,
                             borderRadius: AppRadius.full,
                           ),
-                          child: Text(cat,
+                          child: Text(t.category(key),
                               style: AppTextStyles.label.copyWith(
                                   color: sel
                                       ? AppColors.onDark
@@ -111,7 +112,7 @@ class _BlogIndexScreenState extends State<BlogIndexScreen> {
                       ? Center(
                           child: Padding(
                             padding: const EdgeInsets.all(AppSpacing.band),
-                            child: Text('Keine Artikel in dieser Kategorie.',
+                            child: Text(t.blogNoArticles,
                                 style: AppTextStyles.bodyLG.copyWith(
                                     color: AppColors.stone)),
                           ),

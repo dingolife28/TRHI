@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_text_styles.dart';
 import '../theme/app_theme.dart';
+import '../i18n/language_scope.dart';
 
 class StickerCard extends StatefulWidget {
   const StickerCard({super.key});
@@ -154,6 +155,7 @@ class _ArticleContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = context.t;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
@@ -169,7 +171,7 @@ class _ArticleContent extends StatelessWidget {
                 color: AppColors.brand,
                 borderRadius: AppRadius.full,
               ),
-              child: Text('Gut Health & Mikrobiom',
+              child: Text(t.fermentTag,
                   style: AppTextStyles.eyebrow.copyWith(color: AppColors.onDark)),
             ),
             GestureDetector(
@@ -185,44 +187,14 @@ class _ArticleContent extends StatelessWidget {
         const SizedBox(height: AppSpacing.lg),
 
         Text(
-          'Fermentation: Warum unser Körper diese Jahrtausende alte Technik braucht',
+          t.fermentTitle,
           style: AppTextStyles.headingSM.copyWith(color: AppColors.onDark),
         ),
 
         const SizedBox(height: AppSpacing.lg),
 
-        _Para(
-          'Fermentation ist wahrscheinlich so alt wie die Menschheit selbst. '
-          'Nicht weil unsere Vorfahren besonders klug waren, sondern weil '
-          'Lebensmittel nun mal vergären, wenn man sie lässt.',
-          bold: true,
-        ),
-        _Para(
-          'Was dabei passiert ist: Über zehntausende von Jahren haben wir uns '
-          'gemeinsam mit Mikroben entwickelt. Unser Immunsystem hat gelernt, mit '
-          'ihnen umzugehen. Das Mikrobiom — die Milliarden von Mikroorganismen '
-          'in unserem Verdauungstrakt — ist kein Nebenprodukt der Evolution, '
-          'sondern ein aktiver Teil davon.',
-        ),
-        _Para(
-          'Fermentierte Lebensmittel liefern genau das, was dieses System braucht: '
-          'lebende Mikroorganismen, die die Darmflora bevölkern, stabilisieren und '
-          'in ihrer Vielfalt erhöhen. Diversität ist dabei der entscheidende Faktor.',
-        ),
-        _Para(
-          'Darm und Gehirn kommunizieren ständig miteinander — über den Vagusnerv, '
-          'Hormone, und Botenstoffe, die ausschließlich im Darm produziert werden.',
-        ),
-        _Para(
-          'Hochverarbeitete Lebensmittel, Antibiotika, sterile Umgebungen — das '
-          'alles hat das Mikrobiom des durchschnittlichen Westeuropäers ärmer '
-          'gemacht als das von Jäger-Sammler-Gesellschaften, die an keiner unserer '
-          'Zivilisationskrankheiten leiden.',
-        ),
-        _Para(
-          'Fermentation ist keine Lifestyle-Entscheidung. Es ist eine Rückkehr zu '
-          'etwas, das unsere Physiologie ohnehin erwartet.',
-        ),
+        for (var i = 0; i < t.fermentParas.length; i++)
+          _Para(t.fermentParas[i], bold: i == 0),
       ],
     );
   }

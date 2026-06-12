@@ -3,6 +3,8 @@ import 'package:url_launcher/url_launcher.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_text_styles.dart';
 import '../theme/app_theme.dart';
+import '../i18n/app_text.dart';
+import '../i18n/language_scope.dart';
 import 'mandala_layer.dart';
 
 class ThreePillars extends StatelessWidget {
@@ -10,6 +12,7 @@ class ThreePillars extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = context.t;
     final width = MediaQuery.of(context).size.width;
     final isMobile = width < Breakpoints.tablet;
 
@@ -40,20 +43,20 @@ class ThreePillars extends StatelessWidget {
             ),
             child: Column(
               children: [
-                Text('Deine drei Säulen',
+                Text(t.pillarsEyebrow,
                     style: AppTextStyles.eyebrow.copyWith(
                         color: AppColors.brand, letterSpacing: 1.5)),
                 const SizedBox(height: AppSpacing.lg),
-                Text('Alles hängt zusammen.',
+                Text(t.pillarsHeading,
                     style: AppTextStyles.displayLG.copyWith(color: AppColors.ink),
                     textAlign: TextAlign.center),
                 const SizedBox(height: AppSpacing.band),
                 if (isMobile)
-                  Column(children: _cards())
+                  Column(children: _cards(t))
                 else
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: _cards()
+                    children: _cards(t)
                         .map((c) => Expanded(child: c))
                         .toList(),
                   ),
@@ -65,35 +68,32 @@ class ThreePillars extends StatelessWidget {
     );
   }
 
-  List<Widget> _cards() => [
-    const _PillarCard(
+  List<Widget> _cards(AppText t) => [
+    _PillarCard(
       icon: '🏃',
       title: 'Mobility & Fitness',
-      body: 'Täglich. Ohne Ausreden. Für deinen Rücken, deine Knie, '
-          'deine Energie — damit du dir den Rest des Tages wirklich leisten kannst.',
-      badge: 'Dein Fundament',
+      body: t.pillarMobilityBody,
+      badge: t.pillarMobilityBadge,
       featured: true,
       url: 'https://www.youtube.com/@SquatUniversity',
       linkLabel: '▶ Squat University',
     ),
     const SizedBox(width: AppSpacing.xl, height: AppSpacing.xl),
-    const _PillarCard(
+    _PillarCard(
       icon: '🧘',
       title: 'Mind-Body Connection',
-      body: 'Für manche Transzendentale Meditation — für andere ein Spaziergang '
-          'oder Liegestütze. Finde deine Form der Stille.',
-      badge: 'Innere Stärke',
+      body: t.pillarMindBodyBody,
+      badge: t.pillarMindBodyBadge,
       url: 'https://www.geo.de/wissen/gesundheit/selbstheilung--so-aktivieren-sie-den--inneren-arzt--30178428.html',
-      linkLabel: 'Artikel lesen →',
+      linkLabel: t.pillarReadArticle,
     ),
     const SizedBox(width: AppSpacing.xl, height: AppSpacing.xl),
-    const _PillarCard(
+    _PillarCard(
       icon: '🌿',
-      title: 'Ernährung',
-      body: 'Ein bisschen Achtsamkeit beim Essen reicht oft weiter als du denkst. '
-          'Was du deinem Körper gibst, bestimmt was du dir sonst noch gönnen kannst.',
-      badge: 'Dein Treibstoff',
-      linkLabel: 'Artikel lesen →',
+      title: t.pillarNutritionTitle,
+      body: t.pillarNutritionBody,
+      badge: t.pillarNutritionBadge,
+      linkLabel: t.pillarReadArticle,
       showArticle: true,
     ),
   ];
@@ -250,6 +250,7 @@ class _NutritionArticle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = context.t;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
@@ -264,7 +265,7 @@ class _NutritionArticle extends StatelessWidget {
                 color: AppColors.brand,
                 borderRadius: AppRadius.full,
               ),
-              child: Text('Ernährung',
+              child: Text(t.nutritionArticleTag,
                   style: AppTextStyles.eyebrow.copyWith(color: AppColors.onDark)),
             ),
             GestureDetector(
@@ -278,27 +279,12 @@ class _NutritionArticle extends StatelessWidget {
         ),
         const SizedBox(height: AppSpacing.lg),
         Text(
-          'Was du isst, entscheidet wer du bist',
+          t.nutritionArticleTitle,
           style: AppTextStyles.headingSM.copyWith(color: AppColors.ink),
         ),
         const SizedBox(height: AppSpacing.lg),
-        _Para(
-          'Ernährung ist keine Diät. Es ist die Entscheidung, die du täglich dreimal triffst.',
-          bold: true,
-        ),
-        _Para(
-          'Hochverarbeitete Lebensmittel entzünden — buchstäblich. Chronische Entzündungen '
-          'sind der stille Hintergrund vieler Beschwerden, die wir als "Altern" akzeptieren, '
-          'obwohl sie vermeidbar wären.',
-        ),
-        _Para(
-          'Vollwertige Lebensmittel, fermentierte Produkte, wenig Zucker, wenig Industrieöle. '
-          'Nicht weil ein Lifestyle-Trend es fordert, sondern weil dein Körper damit gebaut wurde.',
-        ),
-        _Para(
-          'Jede Mahlzeit ist ein Signal: zur Regeneration — oder zur Entzündung. '
-          'Du musst nicht perfekt essen. Aber du solltest wählen.',
-        ),
+        for (var i = 0; i < t.nutritionArticleParas.length; i++)
+          _Para(t.nutritionArticleParas[i], bold: i == 0),
       ],
     );
   }

@@ -5,6 +5,8 @@ import 'screens/home_screen.dart';
 import 'screens/booking_screen.dart';
 import 'blog/blog_index_screen.dart';
 import 'blog/blog_article_screen.dart';
+import 'i18n/language_controller.dart';
+import 'i18n/language_scope.dart';
 
 final _router = GoRouter(
   routes: [
@@ -20,15 +22,21 @@ final _router = GoRouter(
 );
 
 class TrhiApp extends StatelessWidget {
-  const TrhiApp({super.key});
+  final LanguageController language;
+  const TrhiApp({super.key, required this.language});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      title: 'TRHI — The Real Health Insurance',
-      theme: buildAppTheme(),
-      routerConfig: _router,
-      debugShowCheckedModeBanner: false,
+    // Der „Bottleneck": LanguageScope liegt über der gesamten App. Schaltet der
+    // Controller um, bauen sich alle Widgets neu, die context.t / context.lang lesen.
+    return LanguageScope(
+      controller: language,
+      child: MaterialApp.router(
+        title: 'TRHI — The Real Health Insurance',
+        theme: buildAppTheme(),
+        routerConfig: _router,
+        debugShowCheckedModeBanner: false,
+      ),
     );
   }
 }

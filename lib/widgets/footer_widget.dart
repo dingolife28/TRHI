@@ -3,6 +3,7 @@ import 'package:qr_flutter/qr_flutter.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_text_styles.dart';
 import '../theme/app_theme.dart';
+import '../i18n/language_scope.dart';
 import 'mandala_layer.dart';
 
 class FooterWidget extends StatelessWidget {
@@ -21,7 +22,7 @@ class FooterWidget extends StatelessWidget {
         errorBuilder: (context, error, stack) => const Icon(
             Icons.fitness_center, color: AppColors.onDark, size: 44));
 
-    final tagline = Text('Move · Mind · Nourish',
+    final tagline = Text(context.t.footerTagline,
         style: AppTextStyles.caption.copyWith(color: AppColors.stone));
 
     final qr = Column(
