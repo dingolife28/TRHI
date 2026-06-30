@@ -9,14 +9,23 @@ import 'lang_test_util.dart';
 void main() {
   GoogleFonts.config.allowRuntimeFetching = false;
 
-  test('ADHS-Artikel ist als neuester Post im Wissenschaft-Filter vorhanden', () {
+  test('ADHS-Artikel ist im Wissenschaft-Filter vorhanden', () {
     final post = getPostBySlug('adhs-amphetamine');
     expect(post, isNotNull);
     expect(post!.categoryKey, 'science');
-    // Newest-first: muss an erster Stelle stehen.
-    expect(blogPosts.first.slug, 'adhs-amphetamine');
     expect(getPostsByCategory('science'), contains(post));
     expect(getPostsByCategory('all'), contains(post));
+  });
+
+  test('Blog-Liste ist absteigend nach Datum sortiert (neuester zuerst)', () {
+    for (var i = 0; i < blogPosts.length - 1; i++) {
+      expect(
+        !blogPosts[i].publishedAt.isBefore(blogPosts[i + 1].publishedAt),
+        isTrue,
+        reason: '${blogPosts[i].slug} darf nicht älter als '
+            '${blogPosts[i + 1].slug} sein',
+      );
+    }
   });
 
   testWidgets('ADHS-Artikelseite rendert Titel & Inhalt (nicht NotFound)',
