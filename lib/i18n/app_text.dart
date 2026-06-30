@@ -29,15 +29,16 @@ class AppText {
           const ['Your', 'body', 'remembers.']);
 
   String get heroBody => _(
-        'Wer noch nie getrunken, geraucht oder schlechte Entscheidungen getroffen hat — '
-            'der braucht uns vielleicht nicht. Der Rest schon.\n\n'
+        'Du musst nicht alles umkrempeln. Ein bisschen besser essen als gestern, '
+            'ein bisschen mehr bewegen — Gewohnheiten, die in deinen Alltag passen, '
+            'nicht in einen perfekten Plan.\n\n'
             'Was dich fast umgebracht hat, macht dich interessant für TRHI. '
             'Denn wer weiß, was auf dem Spiel steht, bewegt sich aus einem anderen Grund. '
             'Nicht weil ein Plan es sagt — sondern weil der Körper sich erinnert.\n\n'
             'Ein Bier. Ein schlechter Tag. Ein Stück Kuchen. Das Leben. '
             'Dafür ist TRHI da. Schau, was du noch kannst.',
-        "Never drank, never smoked, never made a bad decision? "
-            "Then maybe you don't need us. Everyone else does.\n\n"
+        "You don't have to overhaul everything. Eat a little better than yesterday, "
+            "move a little more — habits that fit your everyday life, not some perfect plan.\n\n"
             "What almost killed you is what makes you interesting to TRHI. "
             "Because someone who knows what's at stake moves for a different reason. "
             "Not because a plan says so — but because the body remembers.\n\n"
