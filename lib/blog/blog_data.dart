@@ -42,6 +42,185 @@ class BlogPost {
 
 final List<BlogPost> blogPosts = [
   BlogPost(
+    slug: 'gesetzliche-krankenversicherung-praevention',
+    categoryKey: 'policy',
+    tag: 'Gesundheitspolitik · August 2026',
+    tagEn: 'Health Policy · August 2026',
+    title:
+        'Die gesetzliche Krankenversicherung: Was sie zahlt – und was sie dir schuldig bleibt',
+    titleEn:
+        'Statutory Health Insurance: What It Covers — and What It Owes You',
+    teaser:
+        'Der Name verrät es schon: Krankenversicherung, nicht '
+        'Gesundheitsversicherung. Was das System zuverlässig zahlt, was es dir '
+        'schuldig bleibt – und warum Prävention die Versicherung ist, die du '
+        'selbst abschließen musst.',
+    teaserEn:
+        "The name gives it away: sickness insurance, not health insurance. "
+        "What the system reliably covers, what it doesn't — and why "
+        "prevention is the insurance policy only you can take out.",
+    readingTimeMin: 6,
+    publishedAt: DateTime(2026, 8, 23),
+    content:
+        'Der Name verrät schon viel: Krankenversicherung, nicht '
+        'Gesundheitsversicherung. Das ist kein Zufall, sondern die ehrliche '
+        'Beschreibung eines Systems, das entsteht, sobald du krank bist – nicht '
+        'bevor. Wer in Österreich angestellt ist, zahlt automatisch monatlich '
+        'einen Teil seines Bruttolohns in die gesetzliche Krankenversicherung '
+        'ein, verwaltet seit 2020 größtenteils von der Österreichischen '
+        'Gesundheitskasse (ÖGK). Das Geld ist da, bevor du es brauchst. Die '
+        'Frage ist: Wofür ist es eigentlich da?\n\n'
+        'Was die Kasse tatsächlich zahlt\n\n'
+        'Die gesetzliche Versicherung deckt zuverlässig ab, was passiert, '
+        'nachdem etwas schiefgelaufen ist: Arztbesuche, Spitalsaufenthalte, '
+        'verschriebene Medikamente, Operationen, Notfallversorgung. Das ist '
+        'wichtig und richtig – niemand sollte sich in einer Akutsituation '
+        'Sorgen um die Rechnung machen müssen. Genau dafür wurde das System '
+        'aufgebaut, im Kern seit über hundert Jahren: Risiko absichern, wenn '
+        'der Ernstfall eintritt.\n\n'
+        'Was sie dir schuldig bleibt\n\n'
+        'Doch schau dir an, was fehlt, sobald es um den Ernstfall geht, den zu '
+        'verhindern eigentlich das eigentliche Ziel sein sollte. Personal '
+        'Training, gezielte Ernährungsberatung, präventive '
+        'Bewegungsprogramme, viele Formen von Physiotherapie über ein enges '
+        'Kontingent hinaus – all das trägst du in aller Regel selbst. Ein '
+        'Fitnessstudio-Abo wird nicht erstattet. Ein Ernährungscoaching, das '
+        'dir hilft, gar nicht erst in die Insulinresistenz zu rutschen, taucht '
+        'auf keiner Kassenleistung auf. Das System zahlt für den Bypass, '
+        'nicht für die zehn Jahre Bewegung davor, die den Bypass vielleicht '
+        'überflüssig gemacht hätten.\n\n'
+        'Warum das System so gebaut ist\n\n'
+        'Das ist keine böse Absicht, sondern Struktur: Krankenversicherungen '
+        'sind historisch entlang von Diagnosen und abrechenbaren Leistungen '
+        'gewachsen. Ein Arztbesuch hat einen Code. Eine Tablette hat einen '
+        'Preis. "Iss weniger Zucker" oder "trainiere zweimal die Woche" lässt '
+        'sich schwer in ein Abrechnungssystem pressen, das auf Episoden '
+        'reagiert statt auf Gewohnheiten zu investieren. Das Ergebnis ist '
+        'eine Versicherung, die extrem gut darin ist, dich zu reparieren – '
+        'und strukturell schlecht darin, dich erst gar nicht kaputtgehen zu '
+        'lassen.\n\n'
+        'Die Rechnung, die du nicht siehst\n\n'
+        'Diese Lücke kostet doppelt. Erstens gesellschaftlich: Chronische '
+        'Erkrankungen, die stark mit Lebensstil zusammenhängen – '
+        'Typ-2-Diabetes, Herz-Kreislauf-Erkrankungen, viele Rückenleiden – '
+        'verursachen einen wachsenden Anteil der Gesundheitsausgaben, obwohl '
+        'ein relevanter Teil davon durch Bewegung, Ernährung und '
+        'Stressregulation verzögert oder ganz vermieden werden könnte. '
+        'Zweitens persönlich: Die Kasse zahlt zwar deine Behandlung, aber '
+        'nicht deinen Verdienstausfall an Krankenstandstagen, nicht die '
+        'Lebensqualität, die du verlierst, wenn du mit 55 nicht mehr die '
+        'Stiegen hochkommst, nicht die Jahre, die dir chronische Entzündung '
+        'stiehlt, bevor überhaupt eine Diagnose gestellt wird.\n\n'
+        'Was "The Real Health Insurance" bedeutet\n\n'
+        'Genau hier setzt TRHI an. Nicht als Ersatz für die gesetzliche '
+        'Versicherung – die bleibt wichtig und notwendig –, sondern als das, '
+        'was dazwischen fehlt: die Versicherung, die du abschließt, bevor du '
+        'sie brauchst. Jede Trainingseinheit, jede bewusste Mahlzeit, jede '
+        'Nacht mit ausreichend Schlaf ist im wörtlichen Sinn eine '
+        'Prämienzahlung – nicht an eine Kasse, sondern an deinen zukünftigen '
+        'Körper. Die Kasse springt ein, wenn es zu spät ist. TRHI arbeitet '
+        'daran, dass es gar nicht erst so weit kommt.\n\n'
+        'Was du konkret tun kannst\n\n'
+        '1. Präventionsleistungen deiner Kasse aktiv abfragen. Manche Kassen '
+        'bezuschussen Vorsorgeuntersuchungen oder ausgewählte '
+        'Präventionsprogramme – das wird selten von selbst kommuniziert, '
+        'frag aktiv nach.\n'
+        '2. Bewegung als Fixkosten behandeln, nicht als Kür. Plane Training '
+        'so verbindlich wie eine Versicherungsprämie ein, nicht als das, was '
+        'übrig bleibt, wenn Zeit da ist.\n'
+        '3. Frühzeitig in Beratung investieren statt spät in Behandlung. Ein '
+        'paar Monate gezieltes Coaching sind günstiger als Jahre mit '
+        'chronischer Erkrankung – finanziell wie gesundheitlich.\n'
+        '4. Deine Vorsorgeuntersuchung tatsächlich wahrnehmen. Sie ist eine '
+        'der wenigen präventiven Leistungen, die die Kasse vollständig trägt '
+        '– nutze sie.\n'
+        '5. Das System nicht verteufeln, sondern ergänzen. Die gesetzliche '
+        'Versicherung und deine eigene Präventionsarbeit schließen sich nicht '
+        'aus, sie sollten zusammen greifen.\n\n'
+        '⚠️ Dieser Artikel dient der allgemeinen Information und ersetzt '
+        'keine individuelle Beratung zu Versicherungs-, Steuer- oder '
+        'Rechtsfragen. Aktuelle Beitragssätze und Leistungen erfährst du '
+        'direkt bei deiner Krankenkasse.',
+    contentEn:
+        'The name gives it away: health insurance in German is literally '
+        '"Krankenversicherung" — sickness insurance, not health insurance. '
+        "That's not an accident; it's an honest description of a system "
+        "that switches on once you're sick, not before. If you're employed "
+        'in Austria, a portion of your gross salary goes automatically, '
+        'every month, into statutory health insurance, administered since '
+        '2020 mostly by the Austrian Health Insurance Fund (ÖGK). The money '
+        "is there before you need it. The real question is: what is it "
+        "actually there for?\n\n"
+        'What the Fund Actually Pays For\n\n'
+        'Statutory insurance reliably covers what happens after something '
+        "has already gone wrong: doctor visits, hospital stays, prescribed "
+        "medication, surgery, emergency care. That matters, and it's the "
+        "right priority — nobody should have to worry about the bill in an "
+        "acute emergency. That's exactly what the system was built to do, "
+        'for over a century: insure against risk once the worst case '
+        'happens.\n\n'
+        'What It Owes You\n\n'
+        "But look at what's missing the moment you shift focus to "
+        'preventing the worst case in the first place. Personal training, '
+        'targeted nutrition coaching, preventive movement programs, most '
+        'forms of physiotherapy beyond a narrow allotment — you typically '
+        "pay for all of that yourself. A gym membership isn't reimbursed. "
+        "Nutrition coaching that helps you avoid sliding into insulin "
+        "resistance in the first place doesn't appear on any "
+        "covered-benefits list. The system pays for the bypass surgery, not "
+        'for the ten years of movement beforehand that might have made the '
+        'bypass unnecessary.\n\n'
+        'Why the System Is Built This Way\n\n'
+        "This isn't malice — it's structure. Health insurance systems "
+        'historically grew around diagnoses and billable procedures. A '
+        "doctor's visit has a code. A pill has a price. \"Eat less sugar\" "
+        'or "train twice a week" doesn\'t fit neatly into a billing system '
+        "built to react to episodes rather than invest in habits. The "
+        "result is an insurance system that's extremely good at fixing "
+        'you — and structurally bad at keeping you from breaking in the '
+        'first place.\n\n'
+        "The Bill You Don't See\n\n"
+        'That gap costs twice over. First, at the societal level: chronic '
+        'conditions strongly tied to lifestyle — type 2 diabetes, '
+        'cardiovascular disease, much of chronic back pain — account for a '
+        'growing share of healthcare spending, even though a meaningful '
+        'portion of it could be delayed or avoided through movement, '
+        'nutrition, and stress regulation. Second, personally: the fund '
+        "covers your treatment, but not your lost income on sick days, not "
+        "the quality of life you lose when you can't climb stairs at 55, "
+        'not the years chronic inflammation quietly takes from you before a '
+        'diagnosis is ever made.\n\n'
+        'What "The Real Health Insurance" Means\n\n'
+        'This is exactly where TRHI comes in. Not as a replacement for '
+        'statutory insurance — that stays important and necessary — but as '
+        "what's missing in between: the insurance you take out before you "
+        'need it. Every training session, every deliberate meal, every '
+        'night of real sleep is, quite literally, a premium payment — not '
+        'to an insurance fund, but to your future body. The statutory '
+        "system steps in once it's too late. TRHI works to make sure it "
+        'never has to.\n\n'
+        'What You Can Actually Do\n\n'
+        '1. Actively ask your insurance fund about prevention benefits. '
+        'Some funds subsidize check-ups or selected prevention programs — '
+        'this is rarely advertised, so ask directly.\n'
+        '2. Treat movement as a fixed cost, not an optional extra. Schedule '
+        "training as firmly as an insurance premium, not as whatever's left "
+        'over once time allows.\n'
+        '3. Invest early in guidance instead of late in treatment. A few '
+        'months of targeted coaching is cheaper than years of chronic '
+        'illness — financially and physically.\n'
+        '4. Actually use your free preventive check-up. It\'s one of the '
+        'few preventive services fully covered by statutory insurance — '
+        "don't skip it.\n"
+        "5. Don't villainize the system, complement it. Statutory insurance "
+        "and your own prevention work aren't opposites — they're meant to "
+        'work together.\n\n'
+        '⚠️ This article is for general information only and does not '
+        'replace individual advice on insurance, tax, or legal questions. '
+        'Check current contribution rates and covered benefits directly '
+        'with your health insurance fund.',
+  ),
+  BlogPost(
     slug: 'zucker-fasten-autophagie',
     categoryKey: 'nutrition',
     tag: 'Stoffwechsel & Fasten · Juli 2026',

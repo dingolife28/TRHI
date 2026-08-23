@@ -462,7 +462,7 @@ class AppText {
   // ── Kategorien (stabiler Key → Label) ───────────────────────────────────
   /// Reihenfolge = Filter-Reihenfolge im Blog-Index. 'all' ist nur Filter.
   static const List<String> categoryKeys = [
-    'all', 'fitness', 'nutrition', 'mindbody', 'science', 'seasonal',
+    'all', 'fitness', 'nutrition', 'mindbody', 'science', 'seasonal', 'policy',
   ];
 
   String category(String key) {
@@ -479,6 +479,8 @@ class AppText {
         return _('Wissenschaft', 'Science');
       case 'seasonal':
         return _('Saisonal', 'Seasonal');
+      case 'policy':
+        return _('Staatliche Gesundheit', 'Public Health Policy');
       default:
         return key;
     }
