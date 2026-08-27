@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'theme/app_theme.dart';
 import 'screens/home_screen.dart';
 import 'screens/booking_screen.dart';
+import 'screens/datenschutz_screen.dart';
 import 'blog/blog_index_screen.dart';
 import 'blog/blog_article_screen.dart';
 import 'i18n/language_controller.dart';
@@ -12,6 +13,7 @@ final _router = GoRouter(
   routes: [
     GoRoute(path: '/',        builder: (context, state) => const HomeScreen()),
     GoRoute(path: '/booking', builder: (context, state) => const BookingScreen()),
+    GoRoute(path: '/datenschutz', builder: (context, state) => const DatenschutzScreen()),
     GoRoute(path: '/blog',    builder: (context, state) => const BlogIndexScreen()),
     GoRoute(
       path: '/blog/:slug',

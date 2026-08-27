@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_text_styles.dart';
@@ -55,8 +56,20 @@ class FooterWidget extends StatelessWidget {
       ],
     );
 
-    final copyright = Text('© 2025 TRHI',
-        style: AppTextStyles.caption.copyWith(color: AppColors.stone));
+    final copyright = Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('© 2025 TRHI',
+            style: AppTextStyles.caption.copyWith(color: AppColors.stone)),
+        const SizedBox(height: AppSpacing.xs),
+        InkWell(
+          onTap: () => context.go('/datenschutz'),
+          child: Text('Datenschutz',
+              style: AppTextStyles.caption.copyWith(color: AppColors.stone)),
+        ),
+      ],
+    );
 
     return Container(
       color: AppColors.canvasDark,
