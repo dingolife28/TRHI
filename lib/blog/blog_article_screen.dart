@@ -11,6 +11,7 @@ import '../i18n/app_lang.dart';
 import '../i18n/language_scope.dart';
 import 'blog_data.dart';
 import 'blog_card.dart';
+import 'article_body.dart';
 
 class BlogArticleScreen extends StatelessWidget {
   final String slug;
@@ -214,46 +215,43 @@ class _ArticleBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final paragraphs = content.split('\n\n');
+    final blocks = parseArticleBody(content);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: paragraphs.map((para) {
-        final isNumbered = RegExp(r'^\d+\.').hasMatch(para.trim());
-        final isSingleLine = !para.contains('\n');
+      children: blocks.map((block) {
+        switch (block.type) {
+          case ArticleBlockType.heading:
+            return Padding(
+              padding: const EdgeInsets.only(
+                  top: AppSpacing.xxl, bottom: AppSpacing.sm),
+              child: Text(block.text,
+                  style:
+                      AppTextStyles.headingSM.copyWith(color: AppColors.ink)),
+            );
 
-        if (isSingleLine && para.trim().length < 60 && !isNumbered) {
-          // Short lines = subheadings
-          return Padding(
-            padding: const EdgeInsets.only(
-                top: AppSpacing.xxl, bottom: AppSpacing.sm),
-            child: Text(para.trim(),
-                style: AppTextStyles.headingSM.copyWith(color: AppColors.ink)),
-          );
-        }
-
-        // Check for blockquote-style (starts with ")
-        if (para.trim().startsWith('"') || para.trim().startsWith('„')) {
-          return Padding(
-            padding: const EdgeInsets.symmetric(vertical: AppSpacing.xl),
-            child: Container(
-              padding: const EdgeInsets.only(left: AppSpacing.lg),
-              decoration: const BoxDecoration(
-                border: Border(
-                    left: BorderSide(color: AppColors.brand, width: 3)),
+          case ArticleBlockType.quote:
+            return Padding(
+              padding: const EdgeInsets.symmetric(vertical: AppSpacing.xl),
+              child: Container(
+                padding: const EdgeInsets.only(left: AppSpacing.lg),
+                decoration: const BoxDecoration(
+                  border: Border(
+                      left: BorderSide(color: AppColors.brand, width: 3)),
+                ),
+                child: Text(block.text,
+                    style: AppTextStyles.bodyLG.copyWith(
+                        color: AppColors.ink, fontStyle: FontStyle.italic)),
               ),
-              child: Text(para.trim(),
-                  style: AppTextStyles.bodyLG.copyWith(
-                      color: AppColors.ink, fontStyle: FontStyle.italic)),
-            ),
-          );
-        }
+            );
 
-        return Padding(
-          padding: const EdgeInsets.only(bottom: AppSpacing.lg),
-          child: Text(para.trim(),
-              style: AppTextStyles.bodyLG.copyWith(color: AppColors.ink)),
-        );
+          case ArticleBlockType.paragraph:
+            return Padding(
+              padding: const EdgeInsets.only(bottom: AppSpacing.lg),
+              child: Text(block.text,
+                  style: AppTextStyles.bodyLG.copyWith(color: AppColors.ink)),
+            );
+        }
       }).toList(),
     );
   }
