@@ -92,7 +92,7 @@ class _BookingFormState extends State<BookingForm> {
   @override
   Widget build(BuildContext context) {
     final t = context.t;
-    final isLight = MediaQuery.of(context).size.width >= Breakpoints.tablet;
+    final isLight = !context.isCompact;
     final textColor  = isLight ? AppColors.ink : AppColors.onDark;
     final mutedColor = isLight ? AppColors.stone : AppColors.onDarkMuted;
     final inputFill  = isLight ? AppColors.surfaceSoft : AppColors.surfaceElevated;

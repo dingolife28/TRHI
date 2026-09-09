@@ -29,8 +29,7 @@ class BlogArticleScreen extends StatelessWidget {
         .take(3)
         .toList();
 
-    final width = MediaQuery.of(context).size.width;
-    final isMobile = width < Breakpoints.mobile;
+    final isMobile = context.isNarrow;
     final dateStr = DateFormat('d. MMMM yyyy', lang.code).format(post.publishedAt);
 
     return Scaffold(

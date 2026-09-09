@@ -12,8 +12,7 @@ class AboutSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
-    final isMobile = width < Breakpoints.tablet;
+    final isMobile = context.isCompact;
 
     return Container(
       color: AppColors.canvasDark,
@@ -158,7 +157,7 @@ class _Right extends StatelessWidget {
     final t = context.t;
     // Schmaler als 600px: drei Karten nebeneinander werden zu eng (der Titel
     // "Berufstätige" läuft sonst über) → vertikal stapeln.
-    final isNarrow = MediaQuery.of(context).size.width < Breakpoints.mobile;
+    final isNarrow = context.isNarrow;
 
     final cards = [
       _AudienceCard('🧑‍💼', t.audienceProfessionals, t.audienceProfessionalsBody),

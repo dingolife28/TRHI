@@ -16,8 +16,7 @@ class DatenschutzScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
-    final isMobile = width < Breakpoints.mobile;
+    final isMobile = context.isNarrow;
     final hPad = isMobile ? AppSpacing.xl : AppSpacing.band;
 
     return Scaffold(

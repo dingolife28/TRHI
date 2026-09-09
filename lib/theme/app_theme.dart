@@ -29,6 +29,23 @@ class Breakpoints {
   static const desktop = 1280.0;
 }
 
+/// The one place that turns viewport width into a layout decision. Every
+/// section used to re-derive this itself under a local `isMobile` that
+/// silently meant a different threshold per file — this gives them one
+/// question to ask, correctly named per threshold.
+extension Responsive on BuildContext {
+  double get _screenWidth => MediaQuery.of(this).size.width;
+
+  /// Below 600 — phone-width paddings, audience cards stack instead of row.
+  bool get isNarrow => _screenWidth < Breakpoints.mobile;
+
+  /// Below 1024 — the stack-vs-row threshold most sections collapse at.
+  bool get isCompact => _screenWidth < Breakpoints.tablet;
+
+  /// 1280 and up — full desktop chrome (nav pills, hero side padding).
+  bool get isWide => _screenWidth >= Breakpoints.desktop;
+}
+
 ThemeData buildAppTheme() {
   return ThemeData(
     colorScheme: const ColorScheme.dark(
