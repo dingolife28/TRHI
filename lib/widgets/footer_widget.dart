@@ -12,7 +12,7 @@ class FooterWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isMobile = MediaQuery.of(context).size.width < Breakpoints.tablet;
+    final isMobile = context.isCompact;
 
     // ── Footer-Bausteine (für Desktop-Row und Mobile-Column identisch) ──
     // Nur das (leicht vergrößerte) Logo — "TRHI" als Text entfällt

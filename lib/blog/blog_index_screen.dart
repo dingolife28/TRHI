@@ -23,9 +23,8 @@ class _BlogIndexScreenState extends State<BlogIndexScreen> {
   Widget build(BuildContext context) {
     final t = context.t;
     final filtered = getPostsByCategory(_selectedKey);
-    final width = MediaQuery.of(context).size.width;
-    final isMobile = width < Breakpoints.mobile;
-    final isTablet = width < Breakpoints.tablet;
+    final isMobile = context.isNarrow;
+    final isTablet = context.isCompact;
 
     return Scaffold(
       backgroundColor: AppColors.canvasDark,

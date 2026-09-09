@@ -24,7 +24,7 @@ class BookingLeft extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = context.t;
-    final isMobile = MediaQuery.of(context).size.width < Breakpoints.tablet;
+    final isMobile = context.isCompact;
     final sessions = <(String, String, String)>[
       ('🎯', t.session1Title, t.session1Desc),
       ('📋', t.session2Title, t.session2Desc),

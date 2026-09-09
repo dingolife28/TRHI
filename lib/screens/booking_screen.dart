@@ -32,8 +32,7 @@ class _BookingScreenState extends State<BookingScreen> {
   @override
   Widget build(BuildContext context) {
     final t = context.t;
-    final width = MediaQuery.of(context).size.width;
-    final isMobile = width < Breakpoints.tablet;
+    final isMobile = context.isCompact;
 
     final left = BookingLeft(
       selectedSession: _selectedSession,

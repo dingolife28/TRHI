@@ -74,8 +74,8 @@ class _HeroSectionState extends State<HeroSection>
   Widget build(BuildContext context) {
     final t = context.t;
     final size = MediaQuery.of(context).size;
-    final isMobile = size.width < Breakpoints.tablet;
-    final isDesktop = size.width >= Breakpoints.desktop;
+    final isMobile = context.isCompact;
+    final isDesktop = context.isWide;
 
     // Responsive headline size: 9vw clamped
     final headlineSize = (size.width * 0.09).clamp(40.0, 124.0);

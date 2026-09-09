@@ -14,8 +14,7 @@ class BlogPreviewSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = context.t;
-    final width = MediaQuery.of(context).size.width;
-    final isMobile = width < Breakpoints.tablet;
+    final isMobile = context.isCompact;
     final preview = blogPosts.take(3).toList();
 
     return Container(

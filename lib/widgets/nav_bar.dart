@@ -24,9 +24,8 @@ class TrhiNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = context.t;
-    final width = MediaQuery.of(context).size.width;
-    final isMobile = width < Breakpoints.desktop;
-    final isNarrow = width < Breakpoints.mobile;
+    final isMobile = !context.isWide;
+    final isNarrow = context.isNarrow;
 
     return Positioned(
       top: 0, left: 0, right: 0,

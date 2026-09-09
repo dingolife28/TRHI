@@ -12,8 +12,7 @@ class ServicesSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = context.t;
-    final width = MediaQuery.of(context).size.width;
-    final isMobile = width < Breakpoints.tablet;
+    final isMobile = context.isCompact;
 
     return Container(
       color: AppColors.surfaceElevated,
